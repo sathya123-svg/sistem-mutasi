@@ -1,6 +1,5 @@
-FROM php:8.3-fpm
+FROM php:8.3-apache
 
-# System dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -13,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev
 
-# PHP Extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         gd \
@@ -24,17 +22,20 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         opcache
 
-# Composer
+RUN a2enmod rewrite
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
-
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-EXPOSE 9000
+ENV APACHE_DOCUMENT_ROOT=/var/www/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf
 
-CMD ["php-fpm"]
+EXPOSE 80
