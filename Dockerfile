@@ -1,5 +1,10 @@
 FROM php:8.3-apache
 
+# Fix Apache MPM conflict
+RUN a2dismod mpm_event \
+    && a2enmod mpm_prefork
+
+# System dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -12,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev
 
+# PHP Extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         gd \
@@ -22,8 +28,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         opcache
 
+# Apache config
 RUN a2enmod rewrite
 
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
@@ -33,6 +41,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# Set Laravel public folder
 ENV APACHE_DOCUMENT_ROOT=/var/www/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf \
