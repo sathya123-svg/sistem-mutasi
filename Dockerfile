@@ -2,41 +2,23 @@ FROM php:8.3-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
-    nodejs \
-    npm \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip
-
-# PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
-
-# Set working directory
-WORKDIR /app
-
-# Copy project files (INI PENTING HARUS SEBELUM npm build)
-COPY . .
+    git unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies
+WORKDIR /app
+
+COPY . .
+
 RUN composer install --no-dev --optimize-autoloader
 
-# 🔥 INSTALL & BUILD VITE
-RUN npm install
-RUN npm run build
-
-# (optional tapi aman)
+RUN php artisan key:generate || true
 RUN php artisan storage:link || true
 
-# Expose port
-EXPOSE 8000
+EXPOSE 8080
 
-# Start Laravel
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan migrate --force && \
+    php artisan db:seed --force && \
+    php artisan serve --host=0.0.0.0 --port=8080
