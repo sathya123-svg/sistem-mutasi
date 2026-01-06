@@ -16,7 +16,7 @@ class PendudukImport implements ToModel, WithHeadingRow
         // Cari banjar_id berdasarkan nama banjar di Excel (case-insensitive)
         $banjar = Banjar::whereRaw('LOWER(nama) = ?', [strtolower($row['banjar_id'])])->first();
 
-        return new Penduduk([
+        return Penduduk::updateOrCreate([
             'nik'           => $row['nik'],
             'nama'          => $row['nama'],
             'jenis_kelamin' => $row['jenis_kelamin']=== 'laki-laki' ? 'L' : 'P',

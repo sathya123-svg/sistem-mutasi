@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Kematian;
+use App\Models\Penduduk;
+use App\Models\KK;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class KematianController extends Controller
+{
+    public function create()
+    {
+        // menampilkan daftar penduduk untuk dipilih
+        $penduduk = Penduduk::orderBy('nama')->get();
+
+        return view('kematian.create', compact('penduduk'));
+    }
+
+    public function index()
+    {
+        $kematian = Kematian::with('penduduk')->latest()->get();
+        return view('kematian.index', compact('kematian'));
+    }
+
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'penduduk_id' => 'required|exists:penduduk,id',
+            'tanggal_kematian' => 'required|date',
+        ]);
+
+        // ===============================
+        // 🔒 CEK KEPALA KELUARGA
+        // ===============================
+        $penduduk = Penduduk::findOrFail($request->penduduk_id);
+
+        $isKepalaKeluarga = KK::where('kepala_keluarga', $penduduk->id)->exists();
+
+        if ($isKepalaKeluarga) {
+            return back()->withErrors([
+                'penduduk_id' => 'Penduduk ini adalah Kepala Keluarga. Silakan ganti Kepala Keluarga terlebih dahulu.'
+            ])->withInput();
+        }
+        // ===============================
+
+        DB::transaction(function () use ($request, $penduduk) {
+
+            $penduduk->load('kk');
+
+            // Catat data kematian
+            Kematian::create([
+                'penduduk_id' => $penduduk->id,
+                'nik' => $penduduk->nik,
+                'nama' => $penduduk->nama,
+                'no_kk' => $penduduk->kk->nomor_kk ?? null,
+                'banjar_id' => $penduduk->banjar_id,
+                'tanggal_kematian' => $request->tanggal_kematian,
+            ]);
+
+            // Hapus penduduk dari data aktif
+            $penduduk->delete();
+        });
+
+        return redirect()
+            ->route('kematian.create')
+            ->with('success', 'Data kematian berhasil dicatat.');
+    }
+}

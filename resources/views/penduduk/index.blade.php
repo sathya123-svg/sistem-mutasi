@@ -1,55 +1,111 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+<div class="p-6">
 
-                <h2 class="text-lg font-semibold mb-4">Data Penduduk</h2>
+    <!-- Judul -->
+    <h1 class="text-2xl font-bold mb-4">Data Penduduk</h1>
 
-                <div class="mb-4">
-                    <a href="{{ route('penduduk.create') }}" class="px-4 py-2 bg-green-600 text-black rounded hover:bg-green-700">Tambah Penduduk</a>
-                    <a href="{{ route('penduduk.export.excel') }}" class="px-4 py-2 bg-yellow-500 text-Black rounded hover:bg-yellow-600 ml-2">Export Excel</a>
-                    <a href="{{ route('penduduk.export.pdf') }}" class="px-4 py-2 bg-red-500 text-Black rounded hover:bg-red-600 ml-2">Export PDF</a>
-                </div>
+    <!-- Tombol Aksi -->
+    <div class="flex gap-2 mb-4">
+        <a href="{{ route('penduduk.create') }}"
+           class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            + Tambah Penduduk
+        </a>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300 text-sm">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="border px-4 py-2">NIK</th>
-                                <th class="border px-4 py-2">Nama</th>
-                                <th class="border px-4 py-2">Alamat</th>
-                                <th class="border px-4 py-2">Jenis Kelamin</th>
-                                <th class="border px-4 py-2">Tanggal Lahir</th>
-                                <th class="border px-4 py-2">Banjar</th>
-                                <th class="border px-4 py-2">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($penduduk as $p)
-                                <tr>
-                                    <td class="border px-4 py-2">{{ $p->nik }}</td>
-                                    <td class="border px-4 py-2">{{ $p->nama }}</td>
-                                    <td class="border px-4 py-2">{{ $p->alamat }}</td>
-                                    <td class="border px-4 py-2">{{ $p->jenis_kelamin }}</td>
-                                    <td class="border px-4 py-2">{{ $p->tanggal_lahir }}</td>
-                                    <td class="border px-4 py-2">{{ $p->banjar ? $p->banjar->nama : '-' }}</td>
-                                    <td class="border px-4 py-2 space-x-2">
-                                        <a href="{{ route('penduduk.edit', $p->id) }}" class="text-blue-500 hover:underline">Edit</a>
-                                        <form action="{{ route('penduduk.destroy', $p->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+        <a href="{{ route('penduduk.import.form') }}"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+            Import
+        </a>
 
-            </div>
-        </div>
+        <a href="{{ route('penduduk.export.excel') }}"
+           class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            Export Excel
+        </a>
     </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded shadow overflow-x-auto">
+
+        <table class="w-full border border-gray-200">
+            <thead class="bg-gray-100 text-left">
+            <tr>
+                <th class="px-4 py-2 border">Nama</th>
+                <th class="px-4 py-2 border">NIK</th>
+
+                <th class="px-4 py-2 border hidden md:table-cell">KK</th>
+                <th class="px-4 py-2 border hidden md:table-cell">Jenis Kelamin</th>
+                <th class="px-4 py-2 border hidden lg:table-cell">Tempat Lahir</th>
+                <th class="px-4 py-2 border hidden lg:table-cell">Tanggal Lahir</th>
+                <th class="px-4 py-2 border hidden xl:table-cell">Alamat</th>
+                <th class="px-4 py-2 border hidden md:table-cell">Banjar</th>
+                <th class="px-4 py-2 border hidden lg:table-cell">Kewarganegaraan</th>
+
+                <th class="px-4 py-2 border">Aksi</th>
+            </tr>
+            </thead>
+
+
+            <tbody>
+            @forelse ($penduduk as $p)
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 border font-medium">{{ $p->nama }}</td>
+
+                <td class="px-4 py-2 border">
+                    {{ $p->nik ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden md:table-cell">
+                    <span class="block max-w-[160px] truncate">
+                        {{ $p->kk->nomor_kk ?? '-' }}
+                    </span>
+                </td>
+
+                <td class="px-4 py-2 border hidden md:table-cell">
+                    {{ $p->jenis_kelamin ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden lg:table-cell">
+                    {{ $p->tempat_lahir ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden lg:table-cell">
+                    {{ $p->tanggal_lahir ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden xl:table-cell">
+                    {{ $p->alamat ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden md:table-cell">
+                    {{ $p->banjar->nama ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border hidden lg:table-cell">
+                    {{ $p->kewarganegaraan ?? '-' }}
+                </td>
+
+                <td class="px-4 py-2 border whitespace-nowrap space-x-2">
+                    <a href="{{ route('penduduk.show', $p->id) }}"
+                    class="text-blue-600 hover:underline">Lihat</a>
+                    <a href="{{ route('penduduk.edit', $p->id) }}"
+                    class="text-yellow-600 hover:underline">Edit</a>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="10" class="text-center py-4 text-gray-500">
+                    Data penduduk belum tersedia
+                </td>
+            </tr>
+            @endforelse
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
 @endsection
+
+
+{{-- @extends('layouts.app') @section('content') <div class="p-6"> <!-- Judul --> <h1 class="text-2xl font-bold mb-4">Data Penduduk</h1> <!-- Tombol Aksi --> <div class="flex gap-2 mb-4"> <a href="{{ route('penduduk.create') }}" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"> + Tambah Penduduk </a> <a href="{{ route('penduduk.import.form') }}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"> Import </a> <a href="{{ route('penduduk.export.excel') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"> Export Excel </a> </div> <!-- Card --> <div class="bg-white rounded shadow overflow-x-auto"> <table class="min-w-full border border-gray-200"> <thead class="bg-gray-100 text-left"> <tr> <th class="px-4 py-2 border">Nama</th> <th class="px-4 py-2 border">NIK</th> <th class="px-4 py-2 border">KK</th> <th class="px-4 py-2 border">Jenis Kelamin</th> <th class="px-4 py-2 border">Tempat Lahir</th> <th class="px-4 py-2 border">Tanggal Lahir</th> <th class="px-4 py-2 border">Alamat</th> <th class="px-4 py-2 border">Banjar</th> <th class="px-4 py-2 border">Kewarganegaraan</th> <th class="px-4 py-2 border">Aksi</th> </tr> </thead> <tbody> @forelse ($penduduk as $p) <tr class="hover:bg-gray-50"> <td class="px-4 py-2 border">{{ $p->nama }}</td> <td class="px-4 py-2 border"> {{ $p->nik ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->kk->nomor_kk ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->jenis_kelamin ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->tempat_lahir ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->tanggal_lahir ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->alamat ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->banjar->nama ?? '-' }} </td> <td class="px-4 py-2 border"> {{ $p->kewarganegaraan ?? '-' }} </td> <td class="px-4 py-2 border space-x-2"> <a href="{{ route('penduduk.show', $p->id) }}" class="text-blue-600 hover:underline">Lihat</a> <a href="{{ route('penduduk.edit', $p->id) }}" class="text-yellow-600 hover:underline">Edit</a> </td> </tr> @empty <tr> <td colspan="10" class="text-center py-4 text-gray-500"> Data penduduk belum tersedia </td> </tr> @endforelse </tbody> </table> </div> </div> @endsection --}}

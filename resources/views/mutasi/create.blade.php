@@ -16,48 +16,15 @@
             <form action="{{ route('mutasi.store') }}" method="POST">
                 @csrf
 
-                {{-- Pilih apakah penduduk sudah terdaftar --}}
+                {{-- Pilih penduduk dari data --}}
                 <div class="mb-4">
-                    <label class="block font-medium text-sm text-gray-700 mb-1">Apakah penduduk sudah terdaftar?</label>
-                    <div class="flex items-center space-x-4">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="penduduk_terdaftar" value="1" checked class="form-radio text-blue-600" onclick="toggleForm()">
-                            <span class="ml-2">Ya, pilih dari data</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="penduduk_terdaftar" value="0" class="form-radio text-blue-600" onclick="toggleForm()">
-                            <span class="ml-2">Belum, tambahkan penduduk baru</span>
-                        </label>
-                    </div>
-                </div>
-
-
-
-                {{-- Form pilih penduduk lama --}}
-                <div id="formLama" class="mb-4">
                     <label class="block font-medium text-sm text-gray-700">Pilih Penduduk:</label>
-                    <select name="penduduk_id" class="form-select rounded-md shadow-sm mt-1 block w-full">
+                    <select name="penduduk_id" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
                         <option value="">-- Pilih Penduduk --</option>
                         @foreach ($penduduk as $item)
                             <option value="{{ $item->id }}">{{ $item->nama }} ({{ $item->nik }})</option>
                         @endforeach
                     </select>
-                </div>
-
-                {{-- Form penduduk baru --}}
-                <div id="formBaru" class="mb-4 hidden">
-                    <div class="mb-2">
-                        <label class="block font-medium text-sm text-gray-700">Nama:</label>
-                        <input type="text" name="nama" class="form-input rounded-md shadow-sm mt-1 block w-full">
-                    </div>
-                    <div class="mb-2">
-                        <label class="block font-medium text-sm text-gray-700">NIK:</label>
-                        <input type="text" name="nik" class="form-input rounded-md shadow-sm mt-1 block w-full">
-                    </div>
-                    <div class="mb-2">
-                        <label class="block font-medium text-sm text-gray-700">Alamat:</label>
-                        <input type="text" name="alamat" class="form-input rounded-md shadow-sm mt-1 block w-full">
-                    </div>
                 </div>
 
                 {{-- Jenis Mutasi --}}
@@ -71,10 +38,10 @@
                     </select>
                 </div>
 
-                {{-- Form tujuan banjar --}}
+                {{-- Tujuan Mutasi --}}
                 <div class="mb-4">
-                     <label class="block font-medium text-sm text-gray-700 mb-1">Tujuan Mutasi</label>
-                <select name="tujuan_banjar" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
+                    <label class="block font-medium text-sm text-gray-700 mb-1">Tujuan Mutasi</label>
+                    <select name="tujuan_banjar" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
                         <option value="">-- Pilih Banjar Tujuan --</option>
                         <option value="1">Banjar Tebesaya</option>
                         <option value="2">Banjar Ambengan</option>
@@ -86,8 +53,8 @@
                         <option value="8">Banjar Teges Kawan</option>
                         <option value="9">Banjar Yangloni</option>
                         <option value="10">Banjar Teges Kanginan</option>
-                        <option value="5">Keluar Desa</option>
-                </select>
+                        <option value="11">Keluar Desa</option>
+                    </select>
                 </div>
 
                 {{-- Tanggal Mutasi --}}
@@ -95,17 +62,6 @@
                     <label class="block font-medium text-sm text-gray-700">Tanggal Mutasi:</label>
                     <input type="date" name="tanggal" class="form-input rounded-md shadow-sm mt-1 block w-full" required>
                 </div>
-                
-                {{-- Pilih Banjar --}}
-                {{-- <div class="mb-2">
-                    <label class="block font-medium text-sm text-gray-700">Banjar:</label>
-                    <select name="banjar_id" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
-                        <option value="">-- Pilih Banjar --</option>
-                        @foreach ($banjar as $b)
-                            <option value="{{ $b->id }}">{{ $b->nama }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
 
                 {{-- Keterangan --}}
                 <div class="mb-4">
@@ -123,16 +79,4 @@
         </div>
     </div>
 </div>
-
-{{-- JavaScript untuk toggle form --}}
-<script>
-    function toggleForm() {
-        const value = document.querySelector('input[name="penduduk_terdaftar"]:checked').value;
-        document.getElementById('formLama').style.display = (value === "1") ? "block" : "none";
-        document.getElementById('formBaru').style.display = (value === "0") ? "block" : "none";
-    }
-
-    // Pastikan form tampil sesuai radio saat page dimuat
-    window.addEventListener('DOMContentLoaded', toggleForm);
-</script>
 @endsection

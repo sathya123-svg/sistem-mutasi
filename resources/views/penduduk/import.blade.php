@@ -21,9 +21,20 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        Import
-                    </button>
+                <button
+                type="submit"
+                style="
+                    background:#dc2626 !important;
+                    color:#fff !important;
+                    padding:8px 16px !important;
+                    border:none !important;
+                    border-radius:6px !important;
+                    font-weight:600 !important;
+                    cursor:pointer !important;
+                ">
+                Import
+                </button>
+
                 </div>
             </form>
         </div>

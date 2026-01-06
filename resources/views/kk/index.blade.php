@@ -1,0 +1,71 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Daftar Kartu Keluarga</h1>
+
+
+    <!-- Tombol Aksi -->
+    <div class="flex gap-2 mb-4">
+        <a href="{{ route('kk.create') }}"
+           class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            + Tambah KK
+        </a>
+
+        <a href="{{ route('penduduk.index') }}"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+            Data Penduduk
+        </a>
+
+        <a href="{{ route('penduduk.create') }}"
+           class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            + Tambah Penduduk
+        </a>
+    </div>
+
+
+    {{-- <!-- Tambah KK -->
+    <a href="{{ route('kk.create') }}"
+       class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+        + Tambah KK
+    </a>
+
+    <a href="{{ route('penduduk.index') }}"
+       class="px-4 py-2 bg-blue-600 text-white rounded">
+       Data Penduduk
+    </a>
+
+    <!-- Tambah Penduduk -->
+    <a href="{{ route('penduduk.create') }}"
+       class="px-4 py-2 bg-red-600 text-white rounded hover:bg-green-700">
+        + Tambah Penduduk
+    </a>
+</div> --}}
+
+<table class="w-full mt-4 border border-gray-300">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="border px-4 py-2 text-left">No KK</th>
+            <th class="border px-4 py-2 text-left">Kepala Keluarga</th>
+            <th class="border px-4 py-2 text-left">Jumlah Anggota</th>
+            <th class="border px-4 py-2 text-left">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($kk as $k)
+        <tr class="hover:bg-gray-50">
+            <td class="border px-4 py-2">{{ $k->nomor_kk }}</td>
+            <td class="border px-4 py-2">{{ $k->kepalaKeluargaPenduduk->nama ?? '-' }}</td>
+            <td class="border px-4 py-2">{{ $k->anggota->count() }}</td>
+            <td class="border px-4 py-2">
+                <a href="{{ route('kk.show', $k->id) }}" class="text-blue-600 hover:underline">
+                    Lihat
+                </a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+</div>
+@endsection

@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;
+
+@layer base {
+    button {
+        background-color: initial !important;
+    }
+}
+
+/* ===== BUTTON BASE ===== */
+.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0.5rem 1rem !important;   /* 8px 16px */
+  border-radius: 0.375rem !important; /* rounded-md */
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  text-decoration: none !important;
+
+  cursor: pointer !important;
+  border: none !important;
+  transition: background-color 0.2s ease, opacity 0.2s ease !important;
+}
+
+/* ===== VARIAN WARNA ===== */
+.btn-primary {
+  background-color: #dc2626 !important; /* merah */
+  color: #ffffff !important;
+}
+
+.btn-primary:hover {
+  background-color: #b91c1c !important;
+}
+
+.btn-success {
+  background-color: #16a34a !important; /* hijau */
+  color: #ffffff !important;
+}
+
+.btn-success:hover {
+  background-color: #15803d !important;
+}
+
+.btn-secondary {
+  background-color: #e5e7eb !important; /* abu */
+  color: #1f2937 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db !important;
+}
+
+/* ===== UKURAN ===== */
+.btn-sm {
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.25rem !important;
+  font-size: 1rem !important;
+}
+
+/* ===== DISABLED ===== */
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}

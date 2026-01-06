@@ -1,121 +1,131 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-
-                @if(session('success'))
-                    <div class="mb-4 text-sm text-green-600">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <form action="{{ route('penduduk.store') }}" method="POST">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">Nama:</label>
-                        <input type="text" name="nama" class="form-input rounded-md shadow-sm mt-1 block w-full" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">NIK:</label>
-                        <input type="text" name="nik" class="form-input rounded-md shadow-sm mt-1 block w-full" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">Alamat:</label>
-                        <input type="text" name="alamat" class="form-input rounded-md shadow-sm mt-1 block w-full" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">Jenis Kelamin:</label>
-                        <select name="jenis_kelamin" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="L">Laki-laki</option>
-                            <option value="P">Perempuan</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">Tanggal Lahir:</label>
-                        <input type="date" name="tanggal_lahir" class="form-input rounded-md shadow-sm mt-1 block w-full" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium text-sm text-gray-700">Banjar:</label>
-                        <select name="banjar_id" class="form-select rounded-md shadow-sm mt-1 block w-full" required>
-                            <option value="">-- Pilih Banjar --</option>
-                            <option value="1">Kangin</option>
-                            <option value="2">Kauh</option>
-                            <option value="3">Kelod</option>
-                            <option value="4">Kaja</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end">
-<button type="submit" 
-    class="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 focus:outline-none">
-    Submit
-</button>
-
-
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-@endsection
-
-
-
-
-
-{{-- @extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h1>Tambah Penduduk</h1>
+<div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
+    <h1 class="text-xl font-bold mb-4">Tambah Penduduk</h1>
 
     <form action="{{ route('penduduk.store') }}" method="POST">
         @csrf
-        <div class="mb-3">
-            <label>NIK</label>
-            <input type="text" name="nik" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Nama</label>
-            <input type="text" name="nama" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Alamat</label>
-            <textarea name="alamat" class="form-control" required></textarea>
-        </div>
-        <div class="mb-3">
-            <label>Jenis Kelamin</label>
-            <select name="jenis_kelamin" class="form-control" required>
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label>Tanggal Lahir</label>
-            <input type="date" name="tanggal_lahir" class="form-control" required>
-        </div>
-        @if (Auth::user()->role === 'admin')
-        <div class="mb-3">
-            <label>Banjar</label>
-            <select name="banjar_id" class="form-control" required>
-                @foreach (App\Models\Banjar::all() as $banjar)
-                    <option value="{{ $banjar->id }}">{{ $banjar->nama }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <label class="block">Nama</label>
+                <input type="text" name="nama" value="{{ old('nama') }}" class="w-full border p-2">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label>NIK</label>
+                    <input type="text" name="nik" value="{{ old('nik') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>Jenis Kelamin</label>
+                    <select name="jenis_kelamin" class="w-full border p-2">
+                        <option value="L" {{ old('jenis_kelamin')=='L' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="P" {{ old('jenis_kelamin')=='P' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label>Tempat Lahir</label>
+                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>Tanggal Lahir</label>
+                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="w-full border p-2">
+                </div>
+            </div>
+
+            <div>
+                <label>Alamat</label>
+                <textarea name="alamat" class="w-full border p-2">{{ old('alamat') }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                {{-- <div>
+                    <label>RT</label>
+                    <input type="text" name="rt" value="{{ old('rt') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>RW</label>
+                    <input type="text" name="rw" value="{{ old('rw') }}" class="w-full border p-2">
+                </div> --}}
+                <div>
+                    <label>Banjar</label>
+                    <select name="banjar_id" class="w-full border p-2">
+                        <option value="">-- Pilih Banjar --</option>
+                        @foreach($banjars as $b)
+                            <option value="{{ $b->id }}" {{ old('banjar_id') == $b->id ? 'selected' : '' }}>{{ $b->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            
+
+            {{-- <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label>Agama</label>
+                    <input type="text" name="agama" value="{{ old('agama') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>Pendidikan</label>
+                    <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>Pekerjaan</label>
+                    <input type="text" name="pekerjaan" value="{{ old('pekerjaan') }}" class="w-full border p-2">
+                </div>
+            </div> --}}
+
+            <div class="grid grid-cols-3 gap-4">
+                {{-- <div>
+                    <label>Status Perkawinan</label>
+                    <input type="text" name="status_perkawinan" value="{{ old('status_perkawinan') }}" class="w-full border p-2">
+                </div>
+                <div>
+                    <label>Hubungan Keluarga</label>
+                    <input type="text" name="hubungan_keluarga" value="{{ old('hubungan_keluarga') }}" class="w-full border p-2" placeholder="Kepala Keluarga/Anak/).
+">
+                </div> --}}
+                <div>
+                    <label>Kewarganegaraan</label>
+                    <input type="text" name="kewarganegaraan" value="{{ old('kewarganegaraan') }}" class="w-full border p-2">
+                </div>
+            </div>
+
+            <div>
+                <label>Pilih Nomor KK (opsional)</label>
+                <select name="kk_id" class="w-full border p-2">
+                    <option value="">-- Tidak dimasukkan ke KK sekarang --</option>
+                    @foreach($kks as $kk)
+                        <option value="{{ $kk->id }}" {{ old('kk_id') == $kk->id ? 'selected' : '' }}>
+                            {{ $kk->nomor_kk }} - {{ $kk->kepalaKeluargaPenduduk->nama ?? ' - ' }}
+                        </option>
+                    @endforeach
+                </select>
+                <small class="text-gray-500">Jika tidak memilih, penduduk akan berdiri sendiri (belum di KK).</small>
+            </div>
+
+            {{-- tombol --}}
+            <div class="flex gap-4">
+                <button
+                type="submit"
+                style="
+                    background:#dc2626 !important;
+                    color:#fff !important;
+                    padding:8px 16px !important;
+                    border:none !important;
+                    border-radius:6px !important;
+                    font-weight:600 !important;
+                    cursor:pointer !important;
+                ">
+                Simpan
+                </button>
+            </div>
+        </div>
     </form>
 </div>
-@endsection --}}
+@endsection

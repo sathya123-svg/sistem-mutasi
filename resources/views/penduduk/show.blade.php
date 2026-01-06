@@ -1,45 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-sm rounded p-6">
-            <h2 class="text-2xl font-semibold mb-4">Detail Penduduk</h2>
+<div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
 
-            <div class="mb-4">
-                <strong>Nama:</strong> {{ $penduduk->nama }} <br>
-                <strong>NIK:</strong> {{ $penduduk->nik }} <br>
-                <strong>Alamat:</strong> {{ $penduduk->alamat }}
-            </div>
+    <h1 class="text-2xl font-bold mb-4">Detail Penduduk</h1>
 
-            <h3 class="text-xl font-semibold mb-2">Riwayat Mutasi</h3>
-            @if ($penduduk->mutasi->count() > 0)
-                <table class="w-full table-auto border mt-2">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border px-2 py-1">Jenis</th>
-                            <th class="border px-2 py-1">Tanggal</th>
-                            <th class="border px-2 py-1">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($penduduk->mutasi as $mutasi)
-                            <tr>
-                                <td class="border px-2 py-1">{{ $mutasi->jenis_mutasi }}</td>
-                                <td class="border px-2 py-1">{{ $mutasi->tanggal }}</td>
-                                <td class="border px-2 py-1">{{ $mutasi->keterangan }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <p>Tidak ada riwayat mutasi.</p>
-            @endif
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 
-            <div class="mt-4">
-                <a href="{{ route('penduduk.index') }}" class="text-blue-600 hover:underline">← Kembali</a>
-            </div>
+        <div><strong>Nama:</strong> {{ $penduduk->nama }}</div>
+        <div><strong>NIK:</strong> {{ $penduduk->nik ?? '-' }}</div>
+
+        <div><strong>Jenis Kelamin:</strong> {{ $penduduk->jenis_kelamin }}</div>
+        <div><strong>Tanggal Lahir:</strong> {{ $penduduk->tanggal_lahir ?? '-' }}</div>
+
+        <div><strong>Tempat Lahir:</strong> {{ $penduduk->tempat_lahir ?? '-' }}</div>
+        <div><strong>Kewarganegaraan:</strong> {{ $penduduk->kewarganegaraan ?? '-' }}</div>
+
+        <div class="md:col-span-2">
+            <strong>Alamat:</strong><br>
+            {{ $penduduk->alamat ?? '-' }}
         </div>
+
+        <div><strong>Banjar:</strong> {{ $penduduk->banjar->nama ?? '-' }}</div>
+        <div><strong>Nomor KK:</strong> {{ $penduduk->kk->nomor_kk ?? '-' }}</div>
     </div>
+
+    <div class="mt-6 flex gap-2">
+        <a href="{{ route('penduduk.edit', $penduduk->id) }}"
+           class="px-4 py-2 bg-yellow-500 text-white rounded">
+            Edit
+        </a>
+
+        <a href="{{ route('penduduk.index') }}"
+           class="px-4 py-2 bg-gray-300 rounded">
+            Kembali
+        </a>
+    </div>
+
 </div>
 @endsection

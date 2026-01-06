@@ -34,7 +34,8 @@ class MutasiController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+    // 1️⃣ Validasi input
+    $request->validate([
         'penduduk_terdaftar' => 'required|in:0,1',
         'nama' => 'required_if:penduduk_terdaftar,0',
         'nik' => 'required_if:penduduk_terdaftar,0|nullable|unique:penduduk,nik',
@@ -44,6 +45,8 @@ class MutasiController extends Controller
         'jenis_mutasi' => 'required',
         'tanggal' => 'required|date',
     ]);
+
+    // 2️⃣ Tentukan penduduk yang dipakai
     if ($request->penduduk_terdaftar === '1') {
         $pendudukId = $request->penduduk_id;
     } else {
@@ -52,11 +55,11 @@ class MutasiController extends Controller
             'nik' => $request->nik,
             'alamat' => $request->alamat,
             'banjar_id' => Auth::user()->banjar_id,
-            // tambahkan field lain sesuai tabel penduduk
         ]);
         $pendudukId = $pendudukBaru->id;
     }
 
+    // 3️⃣ Simpan data mutasi
     Mutasi::create([
         'penduduk_id' => $pendudukId,
         'asal_banjar' => Auth::user()->banjar_id,
@@ -66,24 +69,31 @@ class MutasiController extends Controller
         'keterangan' => $request->keterangan
     ]);
 
-         $penduduk = Penduduk::findOrFail($pendudukId);
+    // 4️⃣ Ambil data penduduk yang dimutasi
+    $penduduk = Penduduk::findOrFail($pendudukId);
 
-             if ($request->jenis_mutasi === 'Pindah Domisili') {
+    // 5️⃣ Update / hapus sesuai jenis mutasi
+    if ($request->jenis_mutasi === 'Pindah Domisili') {
         // Update banjar penduduk
         $penduduk->banjar_id = $request->tujuan_banjar;
         $penduduk->save();
-    } 
-    elseif ($request->jenis_mutasi === 'Kawin Keluar') {
-        // Hapus penduduk dari sistem
-        $penduduk->delete();
     }
-    elseif ($request->jenis_mutasi === 'Meninggal') {
-        // Opsional: bisa hapus atau update status menjadi 'meninggal'
+
+    // 🔑 Kalau keluar desa, kawin keluar, atau meninggal → hapus penduduk
+    if (
+        $request->tujuan_banjar == 5 || 
+        $request->jenis_mutasi === 'Kawin Keluar' || 
+        $request->jenis_mutasi === 'Meninggal'
+    ) {
+        // kalau pakai soft delete → penduduk->delete()
+        // kalau mau hapus permanen → forceDelete()
         $penduduk->delete();
     }
 
-    return redirect()->route('mutasi.index')->with('success', 'Data mutasi berhasil disimpan.');
+    return redirect()->route('mutasi.index')
+        ->with('success', 'Data mutasi berhasil disimpan.');
     }
+
 
     /**
      * Display the specified resource.

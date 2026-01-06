@@ -1,4 +1,253 @@
-@extends('layouts.app') <!-- sesuaikan dengan layout kamu -->
+@extends('layouts.app')
+
+@section('content')
+<!-- ====== STYLE ====== -->
+<style>
+    .dashboard-container {
+        padding: 2rem;
+    }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-6px);
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .stat-card p {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .quick-links a {
+        flex: 1;
+        min-width: 180px;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        color: #1f2937;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+    }
+
+    .quick-links a:hover {
+        background: #eef2ff;
+        border-color: #6366f1;
+        color: #4338ca;
+        transform: translateY(-3px);
+    }
+</style>
+
+<!-- ====== CONTENT ====== -->
+<div class="dashboard-container">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+        Dashboard Sistem Mutasi Penduduk
+    </h1>
+
+    <!-- Statistik Cards -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <h3>{{ number_format($totalPenduduk) }}</h3>
+            <p>Total Penduduk</p>
+        </div>
+        <a href="{{ route('mutasi.masuk') }}">
+            <div class="stat-card" style="background: linear-gradient(135deg, #3deb5d, #0cab29);">
+                <h3>{{ $mutasiMasuk }}</h3>
+                <p>Mutasi Masuk</p>
+                <small>Kelahiran & Pendatang</small>
+            </div>
+        </a>
+
+        <a href="{{ route('mutasi.keluar') }}">
+            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+                <h3>{{ $mutasiKeluar }}</h3>
+                <p>Mutasi Keluar</p>
+                <small>Kematian & Perkawinan</small>
+            </div>
+        </a>
+
+        <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+            <h3>{{ $jumlahBanjar }}</h3>
+            <p>Jumlah Banjar</p>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    {{-- <div class="chart-container mt-6">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Statistik Mutasi Bulanan</h2>
+        <canvas id="mutasiChart" height="100"></canvas>
+    </div> --}}
+
+    <!-- Akses Cepat -->
+<h2 class="text-xl font-semibold mt-10 mb-4">Akses Cepat</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- Kelahiran -->
+    <a href="{{ route('kelahiran.create') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-blue-400">
+        <div class="p-3 bg-blue-100 rounded-full">
+            <i class="fas fa-baby text-blue-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Kelahiran</h3>
+            <p class="text-sm text-gray-600">Tambah data kelahiran</p>
+        </div>
+    </a>
+
+    <!-- Kematian -->
+    <a href="{{ route('kematian.create') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-red-400">
+        <div class="p-3 bg-red-100 rounded-full">
+            <i class="fas fa-cross text-red-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Kematian</h3>
+            <p class="text-sm text-gray-600">Input data kematian</p>
+        </div>
+    </a>
+
+    <!-- Pendatang -->
+    <a href="{{ route('pendatang.create') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-green-400">
+        <div class="p-3 bg-green-100 rounded-full">
+            <i class="fas fa-user-plus text-green-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Pendatang</h3>
+            <p class="text-sm text-gray-600">Data pendatang masuk</p>
+        </div>
+    </a>
+
+    <!-- Perkawinan -->
+    <a href="{{ route('perkawinan.create') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-purple-400">
+        <div class="p-3 bg-purple-100 rounded-full">
+            <i class="fas fa-ring text-purple-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Perkawinan</h3>
+            <p class="text-sm text-gray-600">Catat data perkawinan</p>
+        </div>
+    </a>
+
+        <!-- Import Data Penduduk -->
+    <a href="{{ route('penduduk.import.form') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-indigo-400">
+        <div class="p-3 bg-indigo-100 rounded-full">
+            <i class="fas fa-file-import text-indigo-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Import Data</h3>
+            <p class="text-sm text-gray-600">Unggah file Excel Penduduk</p>
+        </div>
+    </a>
+
+    <!-- Export Data Penduduk -->
+    <a href="{{ route('penduduk.export.excel') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition 
+        flex items-center space-x-4 border hover:border-teal-400">
+        <div class="p-3 bg-teal-100 rounded-full">
+            <i class="fas fa-file-export text-teal-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Export Data</h3>
+            <p class="text-sm text-gray-600">Download Excel Penduduk</p>
+        </div>
+    </a>
+
+
+
+
+</div>
+
+
+<!-- ====== SCRIPTS ====== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('mutasiChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt'],
+            datasets: [
+                {
+                    label: 'Mutasi Masuk',
+                    data: [12, 19, 8, 17, 14, 20, 13, 9, 15, 11],
+                    backgroundColor: '#10b981',
+                    borderRadius: 6
+                },
+                {
+                    label: 'Mutasi Keluar',
+                    data: [5, 9, 4, 8, 6, 10, 7, 4, 9, 5],
+                    backgroundColor: '#ef4444',
+                    borderRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#374151' }
+                }
+            },
+            scales: {
+                x: { ticks: { color: '#6b7280' } },
+                y: { ticks: { color: '#6b7280' } }
+            }
+        }
+    });
+</script>
+@endsection
+
+
+
+
+
+
+
+
+
+
+{{-- @extends('layouts.app') <!-- sesuaikan dengan layout kamu -->
 
 @section('content')
 <style>
@@ -71,8 +320,8 @@
         <div class="menu-title">Import Data</div>
     </a>
     {{-- Tambahkan menu lainnya di sini --}}
-</div>
-@endsection
+{{-- </div>
+@endsection --}}
 
 
 
@@ -236,4 +485,4 @@
             </div>
         </div>
     </div>
-</x-app-layout> --}}
+</x-app-layout> --}} 
