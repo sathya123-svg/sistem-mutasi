@@ -1,37 +1,52 @@
-FROM node:20-bullseye AS nodebuild
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
+FROM php:8.3-apache
 
-FROM php:8.3-cli
+# Enable Apache rewrite
+RUN a2enmod rewrite
 
-# System deps
+# System dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    libonig-dev \
+    libxml2-dev \
+    nodejs \
+    npm
+
+# PHP Extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
+        gd \
+        pdo \
         pdo_mysql \
         mbstring \
+        xml \
         zip \
-        gd
+        opcache
 
-# Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Set Apache document root
+ENV APACHE_DOCUMENT_ROOT=/app/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /app
 COPY . .
-COPY --from=nodebuild /app/public/build public/build
 
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
+# Frontend build
+RUN npm install && npm run build
+
+# Laravel setup
 RUN php artisan key:generate || true
 RUN php artisan storage:link || true
+RUN php artisan migrate --force || true
 
 RUN chmod -R 775 storage bootstrap/cache
-
-EXPOSE 8080
-
-CMD php -S 0.0.0.0:8080 -t public
