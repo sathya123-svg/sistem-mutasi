@@ -36,6 +36,9 @@ RUN php artisan key:generate || true
 RUN php artisan optimize:clear || true
 RUN php artisan storage:link || true
 
+RUN npm install
+RUN npm run build
+
 RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8000
