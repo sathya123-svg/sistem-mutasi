@@ -1,46 +1,42 @@
 FROM php:8.3-cli
 
-# System dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    zip \
-    unzip \
     git \
+    unzip \
     curl \
+    nodejs \
+    npm \
+    libpng-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    libzip-dev \
+    zip
 
-# PHP Extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
-        gd \
-        pdo \
-        pdo_mysql \
-        mbstring \
-        xml \
-        zip \
-        opcache
+# PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
 
-# Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
+# Set working directory
 WORKDIR /app
+
+# Copy project files (INI PENTING HARUS SEBELUM npm build)
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN php artisan key:generate || true
-RUN php artisan optimize:clear || true
-RUN php artisan storage:link || true
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
+# 🔥 INSTALL & BUILD VITE
 RUN npm install
 RUN npm run build
 
-RUN chmod -R 775 storage bootstrap/cache
+# (optional tapi aman)
+RUN php artisan storage:link || true
 
+# Expose port
 EXPOSE 8000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Start Laravel
+CMD php artisan serve --host=0.0.0.0 --port=8000
