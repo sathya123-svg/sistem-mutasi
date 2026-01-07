@@ -16,9 +16,14 @@ use App\Http\Controllers\PendatangController;
 use App\Http\Controllers\PerkawinanController;
 
 // default redirect ke login
+// Route::get('/', function () {
+//     return redirect()->route('login');
+// });
+
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect('/login');
 });
+
 
 // dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -94,6 +99,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/penduduk/export/excel', function () {
         return Excel::download(new DataExport, 'data_penduduk.xlsx');
     })->name('penduduk.export.excel');
+
+    Route::get('/kk/export/excel', [KKController::class, 'exportExcel'])
+    ->name('kk.export.excel');
 
     
 

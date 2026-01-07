@@ -68,6 +68,20 @@
         ">
         Simpan
         </button>
+            <a href="{{ route('kelahiran.index') }}"
+        style="
+            margin-left:12px !important;
+            background:#6b7280 !important;
+            color:#fff !important;
+            padding:8px 16px !important;
+            border:none !important;
+            border-radius:6px !important;
+            font-weight:600 !important;
+            cursor:pointer !important;
+            text-decoration:none !important;
+        ">
+        lihat data kelahiran
+        </a>
 
 </form>
 

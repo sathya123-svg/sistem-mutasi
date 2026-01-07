@@ -7,7 +7,10 @@
     <h1 class="text-2xl font-bold mb-4">Data Penduduk</h1>
 
     <!-- Tombol Aksi -->
-    <div class="flex gap-2 mb-4">
+<div class="flex justify-between items-center mb-4">
+
+    {{-- KIRI: TOMBOL (KODE KAMU, TIDAK DIUBAH) --}}
+    <div class="flex gap-2">
         <a href="{{ route('penduduk.create') }}"
            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
             + Tambah Penduduk
@@ -22,6 +25,24 @@
            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             Export Excel
         </a>
+    </div>
+
+    {{-- KANAN: SEARCH --}}
+    <form method="GET" action="{{ route('penduduk.index') }}" class="flex gap-2">
+        <input type="text"
+               name="search"
+               value="{{ request('search') }}"
+               placeholder="Cari nama atau No KK..."
+               class="px-3 py-2 border rounded w-64 focus:outline-none focus:ring focus:border-blue-400">
+
+        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Cari
+        </button>
+    </form>
+
+</div>
+
+
     </div>
 
     <!-- Card -->

@@ -6,7 +6,10 @@
 
 
     <!-- Tombol Aksi -->
-    <div class="flex gap-2 mb-4">
+<div class="flex justify-between items-center mb-4">
+
+    {{-- KIRI: KODE KAMU (TIDAK DIUBAH) --}}
+    <div class="flex gap-2">
         <a href="{{ route('kk.create') }}"
            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
             + Tambah KK
@@ -21,7 +24,28 @@
            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             + Tambah Penduduk
         </a>
+
+        <a href="{{ route('kk.export.excel') }}"
+           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Export KK Excel
+        </a>
     </div>
+
+    {{-- KANAN: SEARCH --}}
+    <form method="GET" action="{{ route('kk.index') }}" class="flex gap-2">
+        <input type="text"
+               name="search"
+               value="{{ request('search') }}"
+               placeholder="Cari kepala keluarga / nomor KK..."
+               class="px-3 py-2 border rounded w-64">
+
+        <button class="px-4 py-2 bg-blue-600 text-white rounded">
+            Cari
+        </button>
+    </form>
+
+</div>
+
 
 
     {{-- <!-- Tambah KK -->

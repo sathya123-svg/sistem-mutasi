@@ -32,4 +32,10 @@ class KK extends Model
     {
         return $this->belongsTo(Banjar::class);
     }
+
+    public function penduduk()
+{
+    return $this->hasMany(Penduduk::class, 'kk_id');
+}
+
 }

@@ -19,27 +19,65 @@ use Illuminate\Support\Facades\Auth;
         return Excel::download(new DataExport, 'data_penduduk.xlsx');
     }
 
-    public function index()
-    {
-        $user = Auth::user();
 
-        // SUPER ADMIN → lihat semua
-        if ($user->role === 'superadmin') {
-            $penduduk = Penduduk::with('kk', 'banjar')
-                ->orderBy('nama')
-                ->paginate(25);
-        } 
-        // ADMIN BANJAR → hanya data banjarnya
-        else {
-            $penduduk = Penduduk::with('kk', 'banjar')
-                ->where('banjar_id', $user->banjar_id)
-                ->orderBy('nama')
-                ->paginate(25);
-        }
 
-        return view('penduduk.index', compact('penduduk'));
+
+public function index(Request $request)
+{
+    $user   = Auth::user();
+    $search = $request->search;
+
+    // 🔹 Query dasar
+    $query = Penduduk::with('kk', 'banjar');
+
+    // 🔐 ROLE FILTER (INI WAJIB DI ATAS)
+    if ($user->role !== 'superadmin') {
+        $query->where('banjar_id', $user->banjar_id);
     }
 
+    // 🔍 SEARCH
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhereHas('kk', function ($kk) use ($search) {
+                  $kk->where('nomor_kk', 'like', "%{$search}%"); // sesuaikan kolom
+              });
+        });
+    }
+
+    // 🔽 PAGINATION
+    $penduduk = $query->orderBy('nama')->paginate(25);
+    $penduduk->appends($request->all());
+
+    return view('penduduk.index', compact('penduduk'));
+}
+
+
+
+
+
+    // public function index()
+    // {
+    //     $user = Auth::user();
+
+    //     // SUPER ADMIN → lihat semua
+    //     if ($user->role === 'superadmin') {
+    //         $penduduk = Penduduk::with('kk', 'banjar')
+    //             ->orderBy('nama')
+    //             ->paginate(25);
+    //     } 
+    //     // ADMIN BANJAR → hanya data banjarnya
+    //     else {
+    //         $penduduk = Penduduk::with('kk', 'banjar')
+    //             ->where('banjar_id', $user->banjar_id)
+    //             ->orderBy('nama')
+    //             ->paginate(25);
+    //     }
+
+    //     return view('penduduk.index', compact('penduduk'));
+    // }
+
+    
 
     public function create()
     {

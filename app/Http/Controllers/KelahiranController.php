@@ -29,24 +29,53 @@ public function create()
     return view('kelahiran.create', compact('kk'));
 }
 
-public function index()
+public function index(Request $request)
 {
     $user = Auth::user();
+    $q = $request->query('q');
 
-    // default (superadmin)
-    $jumlahKelahiran = Kelahiran::count();
+    $kelahiran = Kelahiran::with(['penduduk', 'kkTujuan'])
+        // 🔐 filter role
+        ->when($user->role === 'admin', function ($query) use ($user) {
+            $query->whereHas('penduduk', function ($q) use ($user) {
+                $q->where('banjar_id', $user->banjar_id);
+            });
+        })
 
-    // kalau admin banjar → filter
-    if ($user->role === 'admin' && $user->banjar_id) {
-        $banjarId = $user->banjar_id;
+        // 🔍 SEARCH NAMA / NIK
+        ->when($q, function ($query) use ($q) {
+            $query->whereHas('penduduk', function ($sub) use ($q) {
+                $sub->where('nama', 'like', "%$q%")
+                    ->orWhere('nik', 'like', "%$q%");
+            });
+        })
 
-        $jumlahKelahiran = Kelahiran::whereHas('penduduk', function ($q) use ($banjarId) {
-            $q->where('banjar_id', $banjarId);
-        })->count();
-    }
+        ->latest()
+        ->paginate(20)
+        ->withQueryString();
 
-    return view('dashboard', compact('jumlahKelahiran'));
+    return view('kelahiran.index', compact('kelahiran', 'q'));
 }
+
+
+// public function index()
+// {
+//     $user = Auth::user();
+
+//     // default (superadmin)
+//     $jumlahKelahiran = Kelahiran::count();
+
+//     // kalau admin banjar → filter
+//     if ($user->role === 'admin' && $user->banjar_id) {
+//         $banjarId = $user->banjar_id;
+
+//         $jumlahKelahiran = Kelahiran::whereHas('penduduk', function ($q) use ($banjarId) {
+//             $q->where('banjar_id', $banjarId);
+//         })->count();
+//     }
+
+//     return view('dashboard', compact('jumlahKelahiran'));
+// }
 
     public function store(Request $request)
 {
