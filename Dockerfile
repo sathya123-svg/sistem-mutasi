@@ -31,6 +31,8 @@ WORKDIR /app
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN npm install
+RUN npm run build
 
 # Laravel setup commands
 RUN php artisan key:generate || true
