@@ -7,6 +7,10 @@ use App\Models\Penduduk;
 use App\Models\KK;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\KematianExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class KematianController extends Controller
 {
@@ -69,4 +73,12 @@ class KematianController extends Controller
             ->route('kematian.create')
             ->with('success', 'Data kematian berhasil dicatat.');
     }
+
+    public function exportExcel(Request $request)
+{
+    return Excel::download(
+        new KematianExport($request->user(), $request->q),
+        'data_kematian.xlsx'
+    );
+}
 }

@@ -8,6 +8,11 @@
        class="px-4 py-2 bg-green-600 !important text-white rounded mb-4 inline-block !important">
         + Tambah Perkawinan
     </a>
+    <a href="{{ route('perkawinan.export.excel') }}"
+        class="px-4 py-2 bg-red-600 !important text-white rounded mb-4 inline-block !important">
+        Export Excel
+    </a>
+
 
     <div class="bg-white rounded shadow overflow-x-auto">
         <table class="w-full border">
@@ -22,7 +27,9 @@
                 @forelse($perkawinan as $p)
                 <tr>
                     <td class="border px-4 py-2">{{ $p->penduduk->nama ?? "-" }}</td>
-                    <td class="border px-4 py-2">{{ $p->tanggal_perkawinan }}</td>
+                    <td class="border px-4 py-2">
+                         {{ $p->tanggal ? \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d') : '-' }}
+                    </td>
                     <td class="border px-4 py-2">{{ $p->keterangan }}</td>
                 </tr>
                 @empty

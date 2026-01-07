@@ -103,6 +103,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/kk/export/excel', [KKController::class, 'exportExcel'])
     ->name('kk.export.excel');
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/kelahiran/export/excel', 
+            [\App\Http\Controllers\KelahiranController::class, 'exportExcel']
+        )->name('kelahiran.export.excel');
+
+    });
+
+    Route::get('/kematian/export/excel', [KematianController::class, 'exportExcel'])
+    ->name('kematian.export.excel');
+    Route::get('/perkawinan/export/excel', [PerkawinanController::class, 'exportExcel'])
+    ->name('perkawinan.export.excel');
+
+
     
 
 

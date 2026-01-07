@@ -120,7 +120,7 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
     <!-- Kelahiran -->
-    <a href="{{ route('kelahiran.create') }}" 
+    <a href="{{ route('kelahiran.index') }}" 
         class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-blue-400">
         <div class="p-3 bg-blue-100 rounded-full">
             <i class="fas fa-baby text-blue-600 text-2xl"></i>
@@ -132,7 +132,7 @@
     </a>
 
     <!-- Kematian -->
-    <a href="{{ route('kematian.create') }}" 
+    <a href="{{ route('kematian.index') }}" 
         class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-red-400">
         <div class="p-3 bg-red-100 rounded-full">
             <i class="fas fa-cross text-red-600 text-2xl"></i>
@@ -144,7 +144,7 @@
     </a>
 
     <!-- Pendatang -->
-    <a href="{{ route('pendatang.create') }}" 
+    <a href="{{ route('pendatang.index') }}" 
         class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-green-400">
         <div class="p-3 bg-green-100 rounded-full">
             <i class="fas fa-user-plus text-green-600 text-2xl"></i>
@@ -156,7 +156,7 @@
     </a>
 
     <!-- Perkawinan -->
-    <a href="{{ route('perkawinan.create') }}" 
+    <a href="{{ route('perkawinan.index') }}" 
         class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-purple-400">
         <div class="p-3 bg-purple-100 rounded-full">
             <i class="fas fa-ring text-purple-600 text-2xl"></i>

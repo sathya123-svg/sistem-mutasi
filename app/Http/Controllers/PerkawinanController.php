@@ -8,6 +8,10 @@ use App\Models\KK;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\PerkawinanExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class PerkawinanController extends Controller
 {
@@ -86,5 +90,13 @@ class PerkawinanController extends Controller
         return redirect()
             ->route('perkawinan.create')
             ->with('success', 'Data perkawinan berhasil disimpan.');
+    }
+
+        public function exportExcel()
+    {
+        return Excel::download(
+            new PerkawinanExport(),
+            'data_perkawinan.xlsx'
+        );
     }
 }

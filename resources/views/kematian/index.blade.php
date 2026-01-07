@@ -8,6 +8,11 @@
        class="px-4 py-2 bg-red-600 text-white rounded mb-4 inline-block">
         + Tambah Data Kematian
     </a>
+    <a href="{{ route('kematian.export.excel', request()->query()) }}"
+   class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+    Export Excel
+</a>
+
 
     <div class="bg-white rounded shadow overflow-x-auto">
         <table class="w-full border">
