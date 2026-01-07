@@ -33,7 +33,7 @@
             class="border rounded px-3 py-2 w-64 focus:ring focus:border-blue-400"
         >
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <button class="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700">
             Cari
         </button>
 
@@ -57,7 +57,6 @@
                     <th class="border px-4 py-2 text-left">NIK</th>
                     <th class="border px-4 py-2 text-left">No KK</th>
                     <th class="border px-4 py-2 text-left">Tanggal Lahir</th>
-                    <th class="border px-4 py-2 text-left">Keterangan</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,9 +71,11 @@
                     <td class="border px-4 py-2">
                         {{ $k->kkTujuan->nomor_kk ?? '-' }}
                     </td>
-                    <td class="border px-4 py-2">
-                        {{ $k->tanggal_lahir }}
-                    </td>
+<td class="border px-4 py-2">
+    {{ $k->penduduk->tanggal_lahir ?? '-' }}
+</td>
+
+
                     <td class="border px-4 py-2">
                         {{ $k->keterangan }}
                     </td>
