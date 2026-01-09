@@ -82,13 +82,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/perkawinan', [PerkawinanController::class, 'index'])->name('perkawinan.index');
 
     // role
-    Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->group(function () {
+    Route::middleware('role:superadmin')->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('superadmin.dashboard');
     });
 
 
-    Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
     });
