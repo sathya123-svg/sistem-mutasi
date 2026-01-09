@@ -8,6 +8,10 @@ use App\Models\KK;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\PendatangExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class PendatangController extends Controller
 {
@@ -93,6 +97,14 @@ class PendatangController extends Controller
         return redirect()
             ->route('pendatang.index')
             ->with('success', 'Pendatang berhasil ditambahkan');
+    }
+
+        public function exportExcel()
+    {
+        return Excel::download(
+            new PendatangExport(),
+            'data_pendatang.xlsx'
+        );
     }
 
 }

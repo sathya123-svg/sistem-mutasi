@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-6">
+<div class="p-6 max-w-7xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">Data Perkawinan</h1>
 
     <a href="{{ route('perkawinan.create') }}"

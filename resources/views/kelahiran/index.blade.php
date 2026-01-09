@@ -71,14 +71,10 @@
                     <td class="border px-4 py-2">
                         {{ $k->kkTujuan->nomor_kk ?? '-' }}
                     </td>
-<td class="border px-4 py-2">
-    {{ $k->penduduk->tanggal_lahir ?? '-' }}
-</td>
-
-
                     <td class="border px-4 py-2">
-                        {{ $k->keterangan }}
+                        {{ $k->penduduk->tanggal_lahir ?? '-' }}
                     </td>
+
                 </tr>
                 @empty
                 <tr>

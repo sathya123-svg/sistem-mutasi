@@ -115,6 +115,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/perkawinan/export/excel', [PerkawinanController::class, 'exportExcel'])
     ->name('perkawinan.export.excel');
 
+    Route::get('/pendatang/export/excel', [PendatangController::class, 'exportExcel'])
+    ->name('pendatang.export.excel');
 
     
 

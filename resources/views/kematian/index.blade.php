@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-6">
+<div class="p-6 max-w-7xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">Data Kematian</h1>
 
     <a href="{{ route('kematian.create') }}"
@@ -15,7 +15,7 @@
 
 
     <div class="bg-white rounded shadow overflow-x-auto">
-        <table class="w-full border">
+        <table class="w-full border-collapse">
             <thead class="bg-gray-100">
                 <tr>
                     <th class="border px-4 py-2">Nama</th>

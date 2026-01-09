@@ -1,13 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-6">
+<div class="p-6 max-w-7xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">Data Pendatang</h1>
 
     <a href="{{ route('pendatang.create') }}"
        class="px-4 py-2 bg-green-600 text-white rounded mb-4 inline-block">
         + Tambah Pendatang
     </a>
+    <a href="{{ route('pendatang.export.excel') }}"
+         class="px-4 py-2 bg-green-600 text-white rounded mb-4 inline-block">
+         Export Excel
+    </a>
+
 
     <div class="bg-white rounded shadow overflow-x-auto">
         <table class="w-full border">
