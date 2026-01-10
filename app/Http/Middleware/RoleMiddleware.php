@@ -21,10 +21,11 @@ class RoleMiddleware
         if (!Auth::check()) {
             return redirect('/login');
         }
-
-        if (Auth::user()->role !== $role) {
+        
+        if (trim(Auth::user()->role) !== $role) {
             abort(403);
         }
+
 
         return $next($request);
     }
