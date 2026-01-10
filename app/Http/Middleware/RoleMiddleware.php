@@ -16,18 +16,18 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, $role)
     {
-
-
         if (!Auth::check()) {
-            return redirect('/login');
-        }
-        
-        if (trim(Auth::user()->role) !== $role) {
-            abort(403);
+            return redirect()->route('login');
         }
 
+        if (trim(Auth::user()->role) !== $role) {
+            Auth::logout(); // ⬅️ PENTING
+            return redirect()->route('login')
+                ->withErrors(['role' => 'Anda tidak memiliki akses.']);
+        }
 
         return $next($request);
     }
+
 
 }
