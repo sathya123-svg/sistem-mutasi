@@ -26,9 +26,13 @@ Route::get('/', function () {
 
 
 // dashboard
+// Route::get('/dashboard', [DashboardController::class, 'index'])
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
+
 
 // semua route yang butuh authentikasi
 Route::middleware('auth')->group(function () {
