@@ -53,7 +53,7 @@ class KKController extends Controller
                     ->paginate(25);
             }
 
-            return view('kk.index', compact('kk'));
+            return view('kk.index', compact('KK'));
         }
 
 
