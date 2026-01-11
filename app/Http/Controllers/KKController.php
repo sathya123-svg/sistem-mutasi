@@ -20,7 +20,7 @@ class KKController extends Controller
 
             if ($user->role === 'superadmin') {
 
-                $kk = KK::when($search, function ($query) use ($search) {
+                $KK = KK::when($search, function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
 
                             // nomor KK
