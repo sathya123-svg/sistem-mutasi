@@ -24,13 +24,15 @@
 
     <!-- Tabel Responsif -->
     <div class="bg-white rounded-lg shadow overflow-x-auto">
-        <table class="w-full table-fixed border border-gray-200">
+        <table class="min-w-[600px] border border-gray-200">
             <thead class="bg-gray-100">
                 <tr>
                     <th class="px-4 py-2 border text-left">Nama</th>
                     <th class="px-4 py-2 border text-left">NIK</th>
                     <th class="px-4 py-2 border text-left">Jenis Kelamin</th>
-                    <th class="px-4 py-2 border text-left">Aksi</th>
+                    <th class="px-4 py-2 border text-left">Tempat Lahir</th>
+                    <th class="px-5 py-2 border text-left">Tanggal Lahir</th>
+                    <th class="px-5 py-2 border text-left">Banjar</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,6 +43,9 @@
                     <td class="px-4 py-2 border">
                         {{ $a->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
                     </td>
+                    <td class="px-4 py-2 border">{{ $a->tempat_lahir }}</td>
+                    <td class="px-4 py-2 border">{{ $a->tanggal_lahir }}</td>
+                    <td class="px-4 py-2 border">{{ $a->banjar->nama ?? '-' }}</td>
                 <td class="px-4 py-2 border whitespace-nowrap space-x-2">
                     <a href="{{ route('penduduk.show', $a->id) }}"
                     class="text-blue-600 hover:underline">Lihat</a>

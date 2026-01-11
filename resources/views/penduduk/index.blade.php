@@ -7,10 +7,10 @@
     <h1 class="text-2xl font-bold mb-4">Data Penduduk</h1>
 
     <!-- Tombol Aksi -->
-<div class="flex justify-between items-center mb-4">
+<div class="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
 
     {{-- KIRI: TOMBOL (KODE KAMU, TIDAK DIUBAH) --}}
-    <div class="flex gap-2">
+    <div class="flex gap-2 flex-wrap">
         <a href="{{ route('penduduk.create') }}"
            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
             + Tambah Penduduk
@@ -28,7 +28,10 @@
     </div>
 
     {{-- KANAN: SEARCH --}}
-    <form method="GET" action="{{ route('penduduk.index') }}" class="flex gap-2">
+    <form method="GET"
+      action="{{ route('penduduk.index') }}"
+      class="flex gap-2 w-full md:w-auto">
+    
         <input type="text"
                name="search"
                value="{{ request('search') }}"
