@@ -24,45 +24,46 @@
 
     <!-- Tabel Responsif -->
     <div class="bg-white rounded-lg shadow overflow-x-auto">
-        <table class="min-w-[600px] border border-gray-200">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 border text-left">Nama</th>
-                    <th class="px-4 py-2 border text-left">NIK</th>
-                    <th class="px-4 py-2 border text-left">Jenis Kelamin</th>
-                    <th class="px-4 py-2 border text-left">Tempat Lahir</th>
-                    <th class="px-5 py-2 border text-left">Tanggal Lahir</th>
-                    <th class="px-5 py-2 border text-left">Banjar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($kk->anggota as $a)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-2 border">{{ $a->nama }}</td>
-                    <td class="px-4 py-2 border">{{ $a->nik }}</td>
-                    <td class="px-4 py-2 border">
-                        {{ $a->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
-                    </td>
-                    <td class="px-4 py-2 border">{{ $a->tempat_lahir }}</td>
-                    <td class="px-4 py-2 border">{{ $a->tanggal_lahir }}</td>
-                    <td class="px-4 py-2 border">{{ $a->banjar->nama ?? '-' }}</td>
-                <td class="px-4 py-2 border whitespace-nowrap space-x-2">
-                    <a href="{{ route('penduduk.show', $a->id) }}"
-                    class="text-blue-600 hover:underline">Lihat</a>
-                    <a href="{{ route('penduduk.edit', $a->id) }}"
-                    class="text-yellow-600 hover:underline">Edit</a>
+    <table class="min-w-[900px] w-full border border-gray-200">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2 border text-left">Nama</th>
+                <th class="px-4 py-2 border text-left">NIK</th>
+                <th class="px-4 py-2 border text-left">Jenis Kelamin</th>
+                <th class="px-4 py-2 border text-left">Tempat Lahir</th>
+                <th class="px-4 py-2 border text-left">Tanggal Lahir</th>
+                <th class="px-4 py-2 border text-left">Banjar</th>
+                <th class="px-4 py-2 border text-left">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @forelse($kk->anggota as $a)
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 border">{{ $a->nama }}</td>
+                <td class="px-4 py-2 border">{{ $a->nik }}</td>
+                <td class="px-4 py-2 border">
+                    {{ $a->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
                 </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="px-4 py-4 text-center text-gray-500">
-                        Belum ada anggota keluarga
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                <td class="px-4 py-2 border">{{ $a->tempat_lahir ?? '-' }}</td>
+                <td class="px-4 py-2 border">{{ $a->tanggal_lahir ?? '-' }}</td>
+                <td class="px-4 py-2 border">{{ $a->banjar->nama ?? '-' }}</td>
+                <td class="px-4 py-2 border whitespace-nowrap space-x-2">
+                    <a href="{{ route('penduduk.show', $a->id) }}" class="text-blue-600">Lihat</a>
+                    <a href="{{ route('penduduk.edit', $a->id) }}" class="text-yellow-600">Edit</a>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="7" class="px-4 py-4 text-center text-gray-500">
+                    Belum ada anggota keluarga
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
 
 </div>
 @endsection

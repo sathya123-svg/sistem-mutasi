@@ -31,7 +31,7 @@
     <form method="GET"
       action="{{ route('penduduk.index') }}"
       class="flex gap-2 w-full md:w-auto">
-    
+
         <input type="text"
                name="search"
                value="{{ request('search') }}"
@@ -50,83 +50,84 @@
 
     <!-- Card -->
     <div class="bg-white rounded shadow overflow-x-auto">
+        <div class="min-w-full">
+            <table class="min-w-[800px] w-full border border-gray-200">
 
-        <table class="w-full border border-gray-200">
-            <thead class="bg-gray-100 text-left">
-            <tr>
-                <th class="px-4 py-2 border">Nama</th>
-                <th class="px-4 py-2 border">NIK</th>
+                <thead class="bg-gray-100 text-left">
+                <tr>
+                    <th class="px-4 py-2 border">Nama</th>
+                    <th class="px-4 py-2 border">NIK</th>
 
-                <th class="px-4 py-2 border hidden md:table-cell">KK</th>
-                <th class="px-4 py-2 border hidden md:table-cell">Jenis Kelamin</th>
-                <th class="px-4 py-2 border hidden lg:table-cell">Tempat Lahir</th>
-                <th class="px-4 py-2 border hidden lg:table-cell">Tanggal Lahir</th>
-                <th class="px-4 py-2 border hidden xl:table-cell">Alamat</th>
-                <th class="px-4 py-2 border hidden md:table-cell">Banjar</th>
-                <th class="px-4 py-2 border hidden lg:table-cell">Kewarganegaraan</th>
+                    <th class="px-4 py-2 border hidden md:table-cell">KK</th>
+                    <th class="px-4 py-2 border hidden md:table-cell">Jenis Kelamin</th>
+                    <th class="px-4 py-2 border hidden lg:table-cell">Tempat Lahir</th>
+                    <th class="px-4 py-2 border hidden lg:table-cell">Tanggal Lahir</th>
+                    <th class="px-4 py-2 border hidden xl:table-cell">Alamat</th>
+                    <th class="px-4 py-2 border hidden md:table-cell">Banjar</th>
+                    <th class="px-4 py-2 border hidden lg:table-cell">Kewarganegaraan</th>
 
-                <th class="px-4 py-2 border">Aksi</th>
-            </tr>
-            </thead>
+                    <th class="px-4 py-2 border">Aksi</th>
+                </tr>
+                </thead>
 
 
-            <tbody>
-            @forelse ($penduduk as $p)
-            <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 border font-medium">{{ $p->nama }}</td>
+                <tbody>
+                @forelse ($penduduk as $p)
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 border font-medium">{{ $p->nama }}</td>
 
-                <td class="px-4 py-2 border">
-                    {{ $p->nik ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border">
+                        {{ $p->nik ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden md:table-cell">
-                    <span class="block max-w-[160px] truncate">
-                        {{ $p->kk->nomor_kk ?? '-' }}
-                    </span>
-                </td>
+                    <td class="px-4 py-2 border hidden md:table-cell">
+                        <span class="block max-w-[160px] truncate">
+                            {{ $p->kk->nomor_kk ?? '-' }}
+                        </span>
+                    </td>
 
-                <td class="px-4 py-2 border hidden md:table-cell">
-                    {{ $p->jenis_kelamin ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden md:table-cell">
+                        {{ $p->jenis_kelamin ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden lg:table-cell">
-                    {{ $p->tempat_lahir ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden lg:table-cell">
+                        {{ $p->tempat_lahir ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden lg:table-cell">
-                    {{ $p->tanggal_lahir ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden lg:table-cell">
+                        {{ $p->tanggal_lahir ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden xl:table-cell">
-                    {{ $p->alamat ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden xl:table-cell">
+                        {{ $p->alamat ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden md:table-cell">
-                    {{ $p->banjar->nama ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden md:table-cell">
+                        {{ $p->banjar->nama ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border hidden lg:table-cell">
-                    {{ $p->kewarganegaraan ?? '-' }}
-                </td>
+                    <td class="px-4 py-2 border hidden lg:table-cell">
+                        {{ $p->kewarganegaraan ?? '-' }}
+                    </td>
 
-                <td class="px-4 py-2 border whitespace-nowrap space-x-2">
-                    <a href="{{ route('penduduk.show', $p->id) }}"
-                    class="text-blue-600 hover:underline">Lihat</a>
-                    <a href="{{ route('penduduk.edit', $p->id) }}"
-                    class="text-yellow-600 hover:underline">Edit</a>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="10" class="text-center py-4 text-gray-500">
-                    Data penduduk belum tersedia
-                </td>
-            </tr>
-            @endforelse
-            </tbody>
+                    <td class="px-4 py-2 border whitespace-nowrap space-x-2">
+                        <a href="{{ route('penduduk.show', $p->id) }}"
+                        class="text-blue-600 hover:underline">Lihat</a>
+                        <a href="{{ route('penduduk.edit', $p->id) }}"
+                        class="text-yellow-600 hover:underline">Edit</a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="10" class="text-center py-4 text-gray-500">
+                        Data penduduk belum tersedia
+                    </td>
+                </tr>
+                @endforelse
+                </tbody>
 
-        </table>
-
+            </table>
+        </div>
     </div>
 </div>
 @endsection

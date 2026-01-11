@@ -68,31 +68,37 @@
         + Tambah Penduduk
     </a>
 </div> --}}
-     <div class="bg-white rounded shadow overflow-x-auto"></div>
-        <table class="w-full mt-4 border border-gray-300">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="border px-4 py-2 text-left">No KK</th>
-                    <th class="border px-4 py-2 text-left">Kepala Keluarga</th>
-                    <th class="border px-4 py-2 text-left">Jumlah Anggota</th>
-                    <th class="border px-4 py-2 text-left">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($KK as $k)
-                <tr class="hover:bg-gray-50">
-                    <td class="border px-4 py-2">{{ $k->nomor_kk }}</td>
-                    <td class="border px-4 py-2">{{ $k->kepalaKeluargaPenduduk->nama ?? '-' }}</td>
-                    <td class="border px-4 py-2">{{ $k->anggota->count() }}</td>
-                    <td class="border px-4 py-2">
-                        <a href="{{ route('kk.show', $k->id) }}" class="text-blue-600 hover:underline">
-                            Lihat
-                        </a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div> 
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+             <table class="min-w-[900px] w-full border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border px-4 py-2 text-left">No KK</th>
+                        <th class="border px-4 py-2 text-left">Kepala Keluarga</th>
+                        <th class="border px-4 py-2 text-left">Jumlah Anggota</th>
+                        <th class="border px-4 py-2 text-left">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($KK as $k)
+                    <tr class="hover:bg-gray-50">
+                        <td class="border px-4 py-2">{{ $k->nomor_kk }}</td>
+                        <td class="border px-4 py-2">
+                            {{ $k->kepalaKeluargaPenduduk->nama ?? '-' }}
+                        </td>
+                        <td class="border px-4 py-2">
+                            {{ $k->anggota->count() }}
+                        </td>
+                        <td class="border px-4 py-2 whitespace-nowrap">
+                            <a href="{{ route('kk.show', $k->id) }}"
+                            class="text-blue-600 hover:underline">
+                                Lihat
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
 </div>
 @endsection
