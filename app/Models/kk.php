@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Penduduk;
+use App\Models\Banjar;
 
 class KK extends Model
 {
