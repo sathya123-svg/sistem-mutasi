@@ -76,7 +76,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($kk as $k)
+        @foreach ($KK as $k)
         <tr class="hover:bg-gray-50">
             <td class="border px-4 py-2">{{ $k->nomor_kk }}</td>
             <td class="border px-4 py-2">{{ $k->kepalaKeluargaPenduduk->nama ?? '-' }}</td>
