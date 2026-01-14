@@ -82,15 +82,17 @@
 
     <!-- Statistik Cards -->
     <div class="stat-grid">
-        <div class="stat-card">
+        <a href="{{ route('penduduk.index') }}">
+        <div class="stat-card" style="background: linear-gradient(135deg, #4e5cf0, #4029f1);">
             <h3>{{ number_format($totalPenduduk) }}</h3>
             <p>Total Penduduk</p>
         </div>
+        </a>
+        
         <a href="{{ route('mutasi.masuk') }}">
             <div class="stat-card" style="background: linear-gradient(135deg, #3deb5d, #0cab29);">
                 <h3>{{ $mutasiMasuk }}</h3>
                 <p>Mutasi Masuk</p>
-                <small>Kelahiran & Pendatang</small>
             </div>
         </a>
 
@@ -98,7 +100,6 @@
             <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
                 <h3>{{ $mutasiKeluar }}</h3>
                 <p>Mutasi Keluar</p>
-                <small>Kematian & Perkawinan</small>
             </div>
         </a>
 
