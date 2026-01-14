@@ -5,11 +5,11 @@
     <h1 class="text-2xl font-bold mb-4">Data Perkawinan</h1>
 
     <a href="{{ route('perkawinan.create') }}"
-       class="px-4 py-2 bg-green-600 !important text-white rounded mb-4 inline-block !important">
+       class="px-4 py-2 bg-red-600 !important text-white rounded mb-4 inline-block !important">
         + Tambah Perkawinan
     </a>
     <a href="{{ route('perkawinan.export.excel') }}"
-        class="px-4 py-2 bg-red-600 !important text-white rounded mb-4 inline-block !important">
+        class="px-4 py-2 bg-green-600 !important text-white rounded mb-4 inline-block !important">
         Export Excel
     </a>
 

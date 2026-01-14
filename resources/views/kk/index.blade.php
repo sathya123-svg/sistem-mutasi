@@ -44,10 +44,20 @@
                class="w-64 px-3 py-2 border rounded
                       focus:outline-none focus:ring focus:border-blue-400">
 
-        <button type="submit"
-                class="px-4 py-2 bg-blue-600 text-black rounded hover:bg-blue-700">
-            Cari
-        </button>
+                <div class="flex justify-end">
+                <button
+                type="submit"
+                style="
+                    background:#0653b8 !important;
+                    color:#fff !important;
+                    padding:8px 16px !important;
+                    border:none !important;
+                    border-radius:6px !important;
+                    font-weight:600 !important;
+                    cursor:pointer !important;
+                ">
+                Cari
+                </button>
     </form>
 
 </div>

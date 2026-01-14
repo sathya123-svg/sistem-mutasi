@@ -95,8 +95,8 @@ class PerkawinanController extends Controller
         public function exportExcel()
     {
         return Excel::download(
-            new PerkawinanExport(),
+            new perkawinanExport(),
             'data_perkawinan.xlsx'
         );
     }
-}
+}   

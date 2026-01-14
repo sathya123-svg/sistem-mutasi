@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold mb-4">Data Pendatang</h1>
 
     <a href="{{ route('pendatang.create') }}"
-       class="px-4 py-2 bg-green-600 text-white rounded mb-4 inline-block">
+       class="px-4 py-2 bg-red-600 text-white rounded mb-4 inline-block">
         + Tambah Pendatang
     </a>
     <a href="{{ route('pendatang.export.excel') }}"
