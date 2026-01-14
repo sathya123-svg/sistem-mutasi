@@ -102,10 +102,13 @@
             </div>
         </a>
 
-        <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
-            <h3>{{ $jumlahBanjar }}</h3>
-            <p>Jumlah Banjar</p>
-        </div>
+        <a href="{{ route('banjar.index') }}" style="text-decoration: none;">
+            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #1e40af); cursor: pointer;">
+                <h3>{{ $jumlahBanjar }}</h3>
+                <p>Jumlah Banjar</p>
+            </div>
+        </a>
+
     </div>
 
     <!-- Chart -->

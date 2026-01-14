@@ -14,6 +14,7 @@ use App\Http\Controllers\KKController;
 use App\Http\Controllers\KematianController;
 use App\Http\Controllers\PendatangController;
 use App\Http\Controllers\PerkawinanController;
+use App\Http\Controllers\BanjarController;
 
 // default redirect ke login
 // Route::get('/', function () {
@@ -98,6 +99,9 @@ Route::middleware('auth')->group(function () {
     });
 
 
+    //banjar
+    Route::get('/banjar', [BanjarController::class, 'index'])
+    ->name('banjar.index');
 
     // export
     Route::get('/penduduk/export/excel', function () {
