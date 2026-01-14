@@ -45,7 +45,7 @@
                       focus:outline-none focus:ring focus:border-blue-400">
 
         <button type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                class="px-4 py-2 bg-blue-600 text-black rounded hover:bg-blue-700">
             Cari
         </button>
     </form>

@@ -8,7 +8,7 @@ use App\Models\KK;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Exports\PendatangExport;
+use App\Exports\pendatangExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 
