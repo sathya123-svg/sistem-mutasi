@@ -19,11 +19,11 @@ class KelahiranController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'superadmin') {
-            $kk = KK::with('kepalaKeluargaPenduduk')
+            $KK = KK::with('kepalaKeluargaPenduduk')
                 ->orderBy('nomor_kk')
                 ->get();
         } else {
-            $kk = KK::with('kepalaKeluargaPenduduk')
+            $KK = KK::with('kepalaKeluargaPenduduk')
                 ->where('banjar_id', $user->banjar_id)
                 ->orderBy('nomor_kk')
                 ->get();
@@ -120,6 +120,7 @@ class KelahiranController extends Controller
                 'kk_tujuan_id' => $request->kk_id,
                 'nik' => $request->nik,
                 'jenis_kelamin' => $request->jenis_kelamin,
+                
             ]);
         });
 

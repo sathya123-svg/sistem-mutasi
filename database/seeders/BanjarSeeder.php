@@ -26,7 +26,7 @@ class BanjarSeeder extends Seeder
         ];
 
         foreach ($banjars as $nama) {
-            Banjar::Create(
+            Banjar::updateOrCreate(
                 ['nama' => $nama]
             );
         }
