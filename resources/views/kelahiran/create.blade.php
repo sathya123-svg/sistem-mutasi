@@ -48,7 +48,7 @@
 
     <label class="block mb-2">Nomor KK Tujuan:</label>
     <select name="kk_id" class="w-full mb-6 p-2 border rounded" required>
-        @foreach ($kk as $item)
+        @foreach ($KK as $item)
             <option value="{{ $item->id }}">
                 {{ $item->nomor_kk }} - Kepala: {{ $item->kepalaKeluargaPenduduk->nama ?? '-' }}
             </option>
@@ -68,6 +68,7 @@
         ">
         Simpan
         </button>
+        
             <a href="{{ route('kelahiran.index') }}"
         style="
             margin-left:12px !important;
