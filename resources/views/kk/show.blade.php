@@ -32,8 +32,8 @@
                 <th class="px-4 py-2 border text-left">Jenis Kelamin</th>
                 <th class="px-4 py-2 border text-left">Tempat Lahir</th>
                 <th class="px-4 py-2 border text-left">Tanggal Lahir</th>
-                <th class="px-4 py-2 border text-left">Banjar</th>
-                <th class="px-4 py-2 border text-left">Aksi</th>
+                {{-- <th class="px-4 py-2 border text-left">Banjar</th>
+                <th class="px-4 py-2 border text-left">Aksi</th> --}}
             </tr>
         </thead>
 
@@ -47,11 +47,11 @@
                 </td>
                 <td class="px-4 py-2 border">{{ $a->tempat_lahir ?? '-' }}</td>
                 <td class="px-4 py-2 border">{{ $a->tanggal_lahir ?? '-' }}</td>
-                <td class="px-4 py-2 border">{{ $a->banjar->nama ?? '-' }}</td>
+                {{-- <td class="px-4 py-2 border">{{ $a->banjar->nama ?? '-' }}</td>
                 <td class="px-4 py-2 border whitespace-nowrap space-x-2">
                     <a href="{{ route('penduduk.show', $a->id) }}" class="text-blue-600">Lihat</a>
                     <a href="{{ route('penduduk.edit', $a->id) }}" class="text-yellow-600">Edit</a>
-                </td>
+                </td> --}}
             </tr>
             @empty
             <tr>
