@@ -34,7 +34,9 @@ class KematianController extends Controller
     {
         $request->validate([
             'penduduk_id' => 'required|exists:penduduk,id',
+            'nomor_kk' => 'required|string',
             'tanggal_kematian' => 'required|date',
+            'keterangan' => 'nullable|string',
         ]);
 
         // ===============================
@@ -60,8 +62,9 @@ class KematianController extends Controller
                 'penduduk_id' => $penduduk->id,
                 'nik' => $penduduk->nik,
                 'nama' => $penduduk->nama,
-                'no_kk' => $penduduk->kk->nomor_kk ?? null,
+                'nomor_kk' => $penduduk->kk->nomor_kk ?? null,
                 'banjar_id' => $penduduk->banjar_id,
+                'keterangan' => $request->keterangan,
                 'tanggal_kematian' => $request->tanggal_kematian,
             ]);
 

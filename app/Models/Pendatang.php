@@ -20,6 +20,7 @@ class Pendatang extends Model
         'kk_tujuan_id',
         'keterangan',
         'penduduk_id',
+        'asal'
     ];
 
     /**

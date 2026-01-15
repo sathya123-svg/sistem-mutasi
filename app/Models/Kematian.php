@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Penduduk;
-
+use App\Models\KK;
 class Kematian extends Model
 {
     protected $table = 'kematian';
@@ -20,5 +20,10 @@ class Kematian extends Model
     public function penduduk()
     {
         return $this->belongsTo(Penduduk::class);
+    }
+
+        public function kk()
+    {
+        return $this->belongsTo(KK::class, 'kk_id');
     }
 }
