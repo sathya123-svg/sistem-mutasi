@@ -29,7 +29,7 @@ class KelahiranController extends Controller
                 ->get();
         }
 
-        return view('kelahiran.create', compact('kk'));
+        return view('kelahiran.create', compact('KK'));
     }
 
     public function index(Request $request)
