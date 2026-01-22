@@ -6,6 +6,7 @@ use App\Models\Kematian;
 use App\Models\Penduduk;
 use App\Models\KK;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exports\KematianExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,17 +17,38 @@ class KematianController extends Controller
 {
     public function create()
     {
-        // menampilkan daftar penduduk untuk dipilih
-        $penduduk = Penduduk::orderBy('nama')->get();
+        $user = Auth::user();
+
+        if ($user->role === 'superadmin') {
+            // superadmin lihat semua penduduk
+            $penduduk = Penduduk::orderBy('nama')->get();
+        } else {
+            // operator banjar hanya lihat penduduk banjarnya
+            $penduduk = Penduduk::where('banjar_id', $user->banjar_id)
+                ->orderBy('nama')
+                ->get();
+        }
 
         return view('kematian.create', compact('penduduk'));
     }
 
     public function index()
     {
-        $kematian = Kematian::with('penduduk')->latest()->get();
+        $user = Auth::user();
+
+        if ($user->role === 'superadmin') {
+            // Superadmin lihat semua data kematian
+            $kematian = Kematian::latest()->get();
+        } else {
+            // Admin banjar hanya lihat data banjarnya
+            $kematian = Kematian::where('banjar_id', $user->banjar_id)
+                ->latest()
+                ->get();
+        }
+
         return view('kematian.index', compact('kematian'));
     }
+
 
 
 
@@ -34,7 +56,7 @@ class KematianController extends Controller
     {
         $request->validate([
             'penduduk_id' => 'required|exists:penduduk,id',
-            'nomor_kk' => 'required|string',
+            // 'nomor_kk' => 'required|string',
             'tanggal_kematian' => 'required|date',
             'keterangan' => 'nullable|string',
         ]);
@@ -59,12 +81,12 @@ class KematianController extends Controller
 
             // Catat data kematian
             Kematian::create([
-                'penduduk_id' => $penduduk->id,
-                'nik' => $penduduk->nik,
-                'nama' => $penduduk->nama,
-                'nomor_kk' => $penduduk->kk->nomor_kk ?? null,
-                'banjar_id' => $penduduk->banjar_id,
-                'keterangan' => $request->keterangan,
+                'penduduk_id'      => $penduduk->id,
+                'nik'              => $penduduk->nik,
+                'nama'             => $penduduk->nama,
+                'nomor_kk'         => $penduduk->kk->nomor_kk ?? null,
+                'banjar_id'        => $penduduk->banjar_id,
+                'keterangan'       => $request->keterangan,
                 'tanggal_kematian' => $request->tanggal_kematian,
             ]);
 

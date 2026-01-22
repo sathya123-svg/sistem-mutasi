@@ -170,6 +170,17 @@
             <p class="text-sm text-gray-600">Catat data perkawinan</p>
         </div>
     </a>
+        <!-- Mutasi Keluar -->
+    <a href="{{ route('mutasi_keluar.index') }}" 
+        class="p-6 bg-white shadow rounded-xl hover:shadow-lg transition flex items-center space-x-4 border hover:border-purple-400">
+        <div class="p-3 bg-purple-100 rounded-full">
+            <i class="fas fa-ring text-purple-600 text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-bold">Mutasi Keluar</h3>
+            <p class="text-sm text-gray-600">Catat data mutasi keluar</p>
+        </div>
+    </a>
 
         <!-- Import Data Penduduk -->
     <a href="{{ route('penduduk.import.form') }}" 

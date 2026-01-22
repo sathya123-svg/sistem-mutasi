@@ -12,12 +12,15 @@ class Perkawinan extends Model
 
     protected $fillable = [
         'penduduk_id',
+        'nama',
+        'nik',
+        'nomor_kk',
+        'banjar_id',
         'kk_tujuan_id',
         'tipe',
         'tanggal',
         'keterangan',
     ];
-
     public function penduduk()
     {
         return $this->belongsTo(Penduduk::class);
@@ -26,5 +29,10 @@ class Perkawinan extends Model
     public function kkTujuan()
     {
         return $this->belongsTo(KK::class, 'kk_tujuan_id');
+    }
+
+    public function banjar()
+    {
+        return $this->belongsTo(Banjar::class);
     }
 }

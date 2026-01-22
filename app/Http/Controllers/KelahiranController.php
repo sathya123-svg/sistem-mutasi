@@ -89,6 +89,7 @@ class KelahiranController extends Controller
 
         $request->validate([
             'nama' => 'required',
+            'anak_ke' => 'nullable|integer|min:1',
             'nik' => 'nullable|unique:penduduk,nik',
             'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
@@ -104,13 +105,15 @@ class KelahiranController extends Controller
             // 1️⃣ SIMPAN KE PENDUDUK (DATA UTAMA BAYI)
             $penduduk = Penduduk::create([
                 'nama' => $request->nama,
-                'nik' => $request->nik,
+                'nik' => $request->nik, // bisa null
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'alamat' => $request->alamat,
                 'kewarganegaraan' => $request->kewarganegaraan,
                 'kk_id' => $request->kk_id,      // ✅ masuk KK tujuan
+                'hubungan_keluarga' => 'Anak',
+                'anak_ke' => $request->anak_ke,
                 'banjar_id' => $kk->banjar_id,
             ]);
 

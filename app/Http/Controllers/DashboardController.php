@@ -9,6 +9,7 @@ use App\Models\Kematian;
 use App\Models\Pendatang;
 use App\Models\Perkawinan;
 use App\Models\Banjar;
+use App\Models\MutasiKeluar;
 
 class DashboardController extends Controller
 {
@@ -22,13 +23,16 @@ class DashboardController extends Controller
         if ($user->role === 'superadmin') {
 
             $mutasiMasuk =
-                Kelahiran::count() +
-                Pendatang::count() + 
-                Perkawinan::where('tipe', 'masuk')->count();
+                Kelahiran::count()
+                + Pendatang::count()
+                + Perkawinan::where('tipe', 'masuk')->count();
 
             $mutasiKeluar =
-                Kematian::count() +
-                Perkawinan::where('tipe', 'keluar')->count();
+                Kematian::count()
+                + Perkawinan::where('tipe', 'keluar')->count()
+                + MutasiKeluar::count();
+
+
             return view('dashboard', [
                 'totalPenduduk' => Penduduk::count(),
                 'mutasiMasuk'   => $mutasiMasuk,
@@ -37,105 +41,126 @@ class DashboardController extends Controller
             ]);
         }
 
-        // ======================
-        // ADMIN BANJAR
-        // ======================
-if ($user->role === 'admin') {
+            // ======================
+            // ADMIN BANJAR
+            // ======================
+            if ($user->role === 'admin') {
 
-    $banjar_id = $user->banjar_id;
+                $banjar_id = $user->banjar_id;
 
-    $mutasiMasuk =
-        Kelahiran::whereHas('penduduk', function ($q) use ($banjar_id) {
-            $q->where('banjar_id', $banjar_id);
-        })->count()
-        +
-        Pendatang::whereHas('penduduk', function ($q) use ($banjar_id) {
-            $q->where('banjar_id', $banjar_id);
-        })->count()
-        +
-        Perkawinan::where('tipe', 'masuk')
-            ->whereHas('penduduk', function ($q) use ($banjar_id) {
-                $q->where('banjar_id', $banjar_id);
-            })->count();
+                // ======================
+                // MUTASI MASUK
+                // ======================
+            $mutasiMasuk =
+                Kelahiran::whereHas('penduduk', function ($q) use ($banjar_id) {
+                    $q->where('banjar_id', $banjar_id);
+                })->count()
+                +
+                Pendatang::whereHas('penduduk', function ($q) use ($banjar_id) {
+                    $q->where('banjar_id', $banjar_id);
+                })->count()
+                +
+                Perkawinan::where('tipe', 'masuk')
+                    ->where('banjar_id', $banjar_id)
+                    ->count();
 
-    $mutasiKeluar =
-        Kematian::whereHas('penduduk', function ($q) use ($banjar_id) {
-            $q->where('banjar_id', $banjar_id);
-        })->count()
-        +
-        Perkawinan::where('tipe', 'keluar')
-            ->whereHas('penduduk', function ($q) use ($banjar_id) {
-                $q->where('banjar_id', $banjar_id);
-            })->count();
+                // ======================
+                // MUTASI KELUAR
+                // ======================
+            $mutasiKeluar =
+                Kematian::where('banjar_id', $banjar_id)->count()
+                +
+                Perkawinan::where('tipe', 'keluar')
+                    ->where('banjar_id', $banjar_id)
+                    ->count()
+                +
+                MutasiKeluar::where('banjar_id', $banjar_id)->count();
 
-    return view('dashboard', [
-        'totalPenduduk' => Penduduk::where('banjar_id', $banjar_id)->count(),
-        'mutasiMasuk'   => $mutasiMasuk,
-        'mutasiKeluar'  => $mutasiKeluar,
-        'jumlahBanjar'  => Banjar::count(),
-    ]);
-}
+
+                return view('dashboard', [
+                    'totalPenduduk' => Penduduk::where('banjar_id', $banjar_id)->count(),
+                    'mutasiMasuk'   => $mutasiMasuk,
+                    'mutasiKeluar'  => $mutasiKeluar,
+                    'jumlahBanjar'  => Banjar::count(),
+                ]);
+            }
 
 
         abort(403, 'Role tidak dikenali');
     }
 
-    // ======================
-// DETAIL MUTASI MASUK
-// (Kelahiran + Pendatang)
-// ======================
-    public function mutasiMasuk(Request $request)
-    {
-        $user = $request->user();
+        // ======================
+        // DETAIL MUTASI MASUK
+        // (Kelahiran + Pendatang)
+        // ======================
+            public function mutasiMasuk(Request $request)
+            {
+                $user = $request->user();
 
-        if ($user->role === 'superadmin') {
-            $kelahiran = Kelahiran::latest()->get();
-            $pendatang = Pendatang::latest()->get();
-            $perkawinan = Perkawinan::where('tipe', 'masuk')->latest()->get();
-        } else {
-        $kelahiran = Kelahiran::whereHas('penduduk', function ($q) use ($user) {
-            $q->where('banjar_id', $user->banjar_id);
-        })->latest()->get();
+                if ($user->role === 'superadmin') {
+                    $kelahiran = Kelahiran::latest()->get();
+                    $pendatang = Pendatang::latest()->get();
+                    $perkawinan = Perkawinan::where('tipe', 'masuk')->latest()->get();
+                } else {
 
-        $pendatang = Pendatang::whereHas('penduduk', function ($q) use ($user) {
-            $q->where('banjar_id', $user->banjar_id);
-        })->latest()->get();
+                    $kelahiran = Kelahiran::whereHas('penduduk', function ($q) use ($user) {
+                        $q->where('banjar_id', $user->banjar_id);
+                    })->latest()->get();
 
-        $perkawinan = Perkawinan::where('tipe', 'masuk')
-            ->whereHas('penduduk', function ($q) use ($user) {
-                $q->where('banjar_id', $user->banjar_id);
-            })->latest()->get();
-        }
+                    $pendatang = Pendatang::whereHas('penduduk', function ($q) use ($user) {
+                        $q->where('banjar_id', $user->banjar_id);
+                    })->latest()->get();
 
-        return view('mutasi.masuk', compact('kelahiran', 'pendatang'));
-    }
+                    $perkawinan = Perkawinan::where('tipe', 'masuk')
+                        ->where('banjar_id', $user->banjar_id)
+                        ->latest()
+                        ->get();
+                }
 
-    // ======================
-    // DETAIL MUTASI KELUAR
-    // (Kematian + Perkawinan)
-    // ======================
-    public function mutasiKeluar(Request $request)
-    {
-        $user = $request->user();
 
-        if ($user->role === 'superadmin') {
-            $kematian = Kematian::latest()->get();
-            $perkawinan = Perkawinan::where('tipe', 'keluar')->latest()->get();
-        } else {
-        $kematian = Kematian::whereHas('penduduk', function ($q) use ($user) {
-            $q->where('banjar_id', $user->banjar_id);
-        })->latest()->get();
+                return view('mutasi.masuk', compact('kelahiran', 'pendatang'));
+            }
 
-        $perkawinan = Perkawinan::where('tipe', 'keluar')
-            ->whereHas('penduduk', function ($q) use ($user) {
-                $q->where('banjar_id', $user->banjar_id);
-            })->latest()->get();
-        }
+            // ======================
+            // DETAIL MUTASI KELUAR
+            // (Kematian + Perkawinan)
+            // ======================
+                public function mutasiKeluar(Request $request)
+                {
+                    $user = $request->user();
 
-        return view('mutasi.keluar', compact('kematian', 'perkawinan'));
-    }
+                    if ($user->role === 'superadmin') {
+                        $kematian = Kematian::latest()->get();
 
-    }
+                        $perkawinan = Perkawinan::where('tipe', 'keluar')
+                            ->latest()
+                            ->get();
+
+                        $mutasiKeluar = MutasiKeluar::latest()->get();
+                    } else {
+                        $kematian = Kematian::where('banjar_id', $user->banjar_id)
+                            ->latest()
+                            ->get();
+
+                        $perkawinan = Perkawinan::where('tipe', 'keluar')
+                            ->where('banjar_id', $user->banjar_id)
+                            ->latest()
+                            ->get();
+
+                        $mutasiKeluar = MutasiKeluar::where('banjar_id', $user->banjar_id)
+                            ->latest()
+                            ->get();
+                    }
+
+                    return view('mutasi.keluar', compact(
+                        'kematian',
+                        'perkawinan',
+                        'mutasiKeluar'
+                    ));
+
+                }
+
+}
 
 
 // namespace App\Http\Controllers;

@@ -14,6 +14,7 @@ class Kematian extends Model
         'tanggal_kematian',
         'nama',
         'nik',
+        'banjar_id',
         'keterangan',
     ];
 

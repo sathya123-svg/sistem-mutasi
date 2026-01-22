@@ -7,6 +7,7 @@ use App\Models\Penduduk;
 use App\Models\Banjar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Exports\KKExport;
 use Maatwebsite\Excel\Facades\Excel;
 class KKController extends Controller
@@ -53,7 +54,7 @@ class KKController extends Controller
                     ->paginate(25);
             }
 
-            return view('kk.index', compact('KK'));
+            return view('kk.index', compact('kk'));
         }
 
 
@@ -77,8 +78,20 @@ class KKController extends Controller
             // Form Tambah KK
             public function create()
             {
-                // hanya penduduk yg belum punya KK
-                $penduduk = Penduduk::whereNull('kk_id')->orderBy('nama')->get();
+                $user = Auth::user();
+
+                if ($user->role === 'superadmin') {
+                    // Super admin: semua penduduk yg belum punya KK
+                    $penduduk = Penduduk::whereNull('kk_id')
+                        ->orderBy('nama')
+                        ->get();
+                } else {
+                    // Admin banjar: hanya penduduk banjar sendiri & belum punya KK
+                    $penduduk = Penduduk::whereNull('kk_id')
+                        ->where('banjar_id', $user->banjar_id)
+                        ->orderBy('nama')
+                        ->get();
+                }
 
                 return view('kk.create', compact('penduduk'));
             }
@@ -122,22 +135,38 @@ class KKController extends Controller
             public function addMember($id)
             {
                 $kk = KK::findOrFail($id);
+                $user = Auth::user();
 
-                // daftar penduduk tanpa KK
-                $penduduk = Penduduk::whereNull('kk_id')->orderBy('nama')->get();
+                if ($user->role === 'superadmin') {
+                    // Super admin: semua penduduk tanpa KK
+                    $penduduk = Penduduk::whereNull('kk_id')
+                        ->orderBy('nama')
+                        ->get();
+                } else {
+                    // Admin banjar: hanya penduduk tanpa KK dari banjar KK tsb
+                    $penduduk = Penduduk::whereNull('kk_id')
+                        ->where('banjar_id', $kk->banjar_id)
+                        ->orderBy('nama')
+                        ->get();
+                }
 
                 return view('kk.add-member', compact('kk', 'penduduk'));
             }
+
 
             // Simpan anggota
             public function storeMember(Request $request, $id)
             {
                 $request->validate([
                     'penduduk_id' => 'required|exists:penduduk,id',
+                    'hubungan_keluarga' => 'required|string|max:100',
+                    'anak_ke' => 'nullable|integer|min:1',
                 ]);
 
                 $penduduk = Penduduk::findOrFail($request->penduduk_id);
                 $penduduk->kk_id = $id;
+                $penduduk->hubungan_keluarga = $request->hubungan_keluarga;
+                $penduduk->anak_ke = $request->anak_ke;
                 $penduduk->save();
 
                 return redirect()->route('kk.show', $id)
@@ -152,4 +181,88 @@ class KKController extends Controller
                 fileName: 'data_kk.xlsx'
             );
         }
+
+            // edit anggota
+            public function editAnggota(KK $kk, Penduduk $penduduk)
+        {
+            // pastikan anggota ini milik KK tsb
+            abort_if($penduduk->kk_id !== $kk->id, 403);
+
+            return view('kk.edit-anggota', compact('kk', 'penduduk'));
+        }
+
+        public function gantiKepalaForm($id)
+        {
+            $kk = KK::with('anggota')->findOrFail($id);
+
+            $calon = $kk->anggota
+                ->where('id', '!=', $kk->kepala_keluarga_id);
+
+            return view('kk.ganti-kepala', compact('kk', 'calon'));
+        }
+
+public function gantiKepala(Request $request, $id)
+{
+    $request->validate([
+        'kepala_keluarga_id' => 'required|exists:penduduk,id'
+    ]);
+
+    $kk = KK::findOrFail($id);
+
+    // simpan kepala keluarga lama
+    $kepalaLamaId = $kk->kepala_keluarga;
+
+    // 🔥 UPDATE KUNCI (INI YANG MENENTUKAN)
+    $kk->update([
+        'kepala_keluarga' => $request->kepala_keluarga_id
+    ]);
+
+    // kepala lama → anggota
+    if ($kepalaLamaId) {
+        Penduduk::where('id', $kepalaLamaId)
+            ->update(['hubungan_keluarga' => 'Anggota']);
+    }
+
+    // kepala baru → kepala keluarga
+    Penduduk::where('id', $request->kepala_keluarga_id)
+        ->update(['hubungan_keluarga' => 'Kepala Keluarga']);
+
+    return redirect()
+        ->route('kk.show', $kk->id)
+        ->with('success', 'Kepala keluarga berhasil diganti.');
+}
+
+
+
+
+
+        public function updateAnggota(Request $request, KK $kk, Penduduk $penduduk)
+        {
+            abort_if($penduduk->kk_id !== $kk->id, 403);
+
+            $request->validate([
+                'hubungan_keluarga' => 'required|string',
+                'anak_ke' => 'nullable|integer|min:1',
+            ]);
+
+                $data = [
+            'hubungan_keluarga' => $request->hubungan_keluarga,
+            'anak_ke' => $request->hubungan_keluarga === 'Anak'
+                ? $request->anak_ke
+                : null,
+                    ];
+
+            $penduduk->update([
+                'hubungan_keluarga' => $request->hubungan_keluarga,
+                'anak_ke' => $request->hubungan_keluarga === 'Anak'
+                    ? $request->anak_ke
+                    : null, // 🔥 otomatis null kalau bukan Anak
+            ]);
+
+
+            return redirect()
+                ->route('kk.show', $kk->id)
+                ->with('success', 'Data anggota keluarga berhasil diperbarui.');
+        }
+
 }

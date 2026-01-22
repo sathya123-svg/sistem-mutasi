@@ -39,11 +39,21 @@ class PerkawinanController extends Controller
     }
 
 
-    public function index()
-    {
-        $perkawinan = Perkawinan::latest()->get();
-        return view('perkawinan.index', compact('perkawinan'));
-    }
+        public function index()
+        {
+            $user = Auth::user();
+
+            if ($user->role === 'superadmin') {
+                $perkawinan = Perkawinan::latest()->get();
+            } else {
+                $perkawinan = Perkawinan::where('banjar_id', $user->banjar_id)
+                    ->latest()
+                    ->get();
+            }
+
+            return view('perkawinan.index', compact('perkawinan'));
+        }
+
 
 
     // =============================
@@ -63,29 +73,46 @@ class PerkawinanController extends Controller
 
             $penduduk = Penduduk::findOrFail($request->penduduk_id);
 
-            // Jika MASUK KK
+            // =========================
+            // JIKA MENIKAH MASUK
+            // =========================
             if ($request->tipe === 'masuk') {
                 $kk = KK::findOrFail($request->kk_tujuan_id);
-                $penduduk->kk_id = $kk->id;
-                $penduduk->banjar_id = $kk->banjar_id;
+
+                $penduduk->update([
+                    'kk_id' => $kk->id,
+                    'banjar_id' => $kk->banjar_id,
+                ]);
             }
 
-            // Jika KELUAR KK
-            if ($request->tipe === 'keluar') {
-                $penduduk->kk_id = null;
-            }
-
-            $penduduk->save();
-
-            // Catat perkawinan
+            // =========================
+            // CATAT PERKAWINAN (WAJIB SEBELUM DELETE)
+            // =========================
             Perkawinan::create([
                 'penduduk_id'  => $penduduk->id,
-                'kk_tujuan_id' => $request->tipe === 'masuk' ? $request->kk_tujuan_id : null,
-                'tipe'         => $request->tipe,
+                'nama'         => $penduduk->nama,
+                'nik'          => $penduduk->nik,
+                'nomor_kk'     => $penduduk->kk->nomor_kk ?? null,
+                'banjar_id'    => $penduduk->banjar_id,
+
+                // 🔥 INI YANG PENTING
+                'tipe'  => $request->tipe, // masuk / keluar
+                'kk_tujuan_id' => $request->tipe === 'masuk'
+                                    ? $request->kk_tujuan_id
+                                    : null,
+
                 'tanggal'      => $request->tanggal,
                 'keterangan'   => $request->keterangan,
             ]);
+
+            // =========================
+            // JIKA MENIKAH KELUAR → HAPUS
+            // =========================
+            if ($request->tipe === 'keluar') {
+                $penduduk->delete();
+            }
         });
+
 
         return redirect()
             ->route('perkawinan.create')

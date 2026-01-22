@@ -21,25 +21,41 @@
                     <th class="border px-4 py-2">Nama</th>
                     <th class="border px-4 py-2">tanggal Nikah</th>
                     <th class="border px-4 py-2">Keterangan</th>
+                    <th class="border px-4 py-2">Tipe</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($perkawinan as $p)
-                <tr>
-                    <td class="border px-4 py-2">{{ $p->penduduk->nama ?? "-" }}</td>
-                    <td class="border px-4 py-2">
-                         {{ $p->tanggal ? \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d') : '-' }}
-                    </td>
-                    <td class="border px-4 py-2">{{ $p->keterangan }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="text-center py-4 text-gray-500 ">
-                        Data perkawinan belum ada
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="border px-4 py-2">{{ $p->nama }}</td>
+
+                        <td class="border px-4 py-2">
+                            {{ \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d') }}
+                        </td>
+
+                        <td class="border px-4 py-2">{{ $p->keterangan }}</td>
+                            {{-- ⬇️ INI INTINYA --}}
+                        <td class="border px-4 py-2">
+                            @if ($p->tipe === 'masuk')
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">
+                                    Menikah Masuk
+                                </span>
+                            @else
+                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
+                                    Menikah Keluar
+                                </span>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-gray-500">
+                            Data perkawinan belum ada
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 </div>

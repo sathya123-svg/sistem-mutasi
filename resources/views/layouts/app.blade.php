@@ -27,6 +27,31 @@
                     </div>
                 </header>
             @endisset
+{{-- GLOBAL SUCCESS ALERT --}}
+@if (session('success'))
+    <div
+        id="alert-success"
+        class="mx-auto mt-4 max-w-7xl rounded bg-green-100 border border-green-400 text-green-700 px-4 py-3">
+        {{ session('success') }}
+    </div>
+
+        {{-- @if(session('success'))
+        <div class="bg-green-200 text-green-700 p-2 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif --}}
+
+    <script>
+        setTimeout(() => {
+            const alert = document.getElementById('alert-success');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 4000); // ⏱️ 4 detik
+    </script>
+@endif
 
             <!-- Page Content -->
             <main>

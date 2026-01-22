@@ -20,7 +20,7 @@
                 <tr>
                     <th class="border px-4 py-2">Nama</th>
                     <th class="border px-4 py-2">NIK</th>
-                    {{-- <th class="border px-4 py-2">No KK</th> --}}
+                    <th class="border px-4 py-2">No KK</th>
                     <th class="border px-4 py-2">Tanggal Meninggal</th>
                     <th class="border px-4 py-2">keterangan</th>
                 </tr>
@@ -30,11 +30,9 @@
                 <tr>
                     <td class="border px-4 py-2">{{ $k->nama }}</td>
                     <td class="border px-4 py-2">{{ $k->nik }}</td>
-                    {{-- <td class="border px-4 py-2">{{ $k->nomor_kk ?? '-' }}</td> --}}
+                    <td class="border px-4 py-2">{{ $k->nomor_kk ?? '-' }}</td>
                     <td class="border px-4 py-2">{{ $k->tanggal_kematian }}</td>
-                    <td class="border px-4 py-2">
-                        {{ $k->keterangan ?? '-' }}
-                    </td>
+                    <td class="border px-4 py-2">{{ $k->keterangan }}</td>
                 </tr>
                 @empty
                 <tr>

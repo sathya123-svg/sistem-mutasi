@@ -92,7 +92,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($KK as $k)
+                    @foreach ($kk as $k)
                     <tr class="hover:bg-gray-50">
                         <td class="border px-4 py-2">{{ $k->nomor_kk }}</td>
                         <td class="border px-4 py-2">

@@ -47,11 +47,24 @@ class PendatangController extends Controller
     /**
      * List pendatang
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pendatang = Pendatang::with(['penduduk', 'kkTujuan'])->get();
+        $user = $request->user();
+
+        if ($user->role === 'superadmin') {
+            $pendatang = Pendatang::with(['penduduk', 'kkTujuan'])->latest()->get();
+        } else {
+            $pendatang = Pendatang::with(['penduduk', 'kkTujuan'])
+                ->whereHas('penduduk', function ($q) use ($user) {
+                    $q->where('banjar_id', $user->banjar_id);
+                })
+                ->latest()
+                ->get();
+        }
+
         return view('pendatang.index', compact('pendatang'));
     }
+
 
 
     /**
@@ -62,16 +75,22 @@ class PendatangController extends Controller
         $request->validate([
             'nama'          => 'required|string|max:255',
             'nik'           => 'required|string|max:20|unique:penduduk,nik',
+            'kk_id'         => 'nullable|exists:kks,id',
             'jenis_kelamin' => 'required|in:L,P',
             'tempat_lahir'  => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'asal'          => 'required|string|max:255',
-            'kk_tujuan_id'  => 'required|exists:kks,id',
+            'kk_tujuan_id'  => 'nullable|exists:kks,id',
         ]);
 
         DB::transaction(function () use ($request) {
 
-            $kk = KK::findOrFail($request->kk_tujuan_id);
+            // $kk = KK::findOrFail($request->kk_tujuan_id);
+            $kk = null;
+
+            if ($request->filled('kk_tujuan_id')) {
+                     $kk = KK::findOrFail($request->kk_tujuan_id);
+               }
 
             // 1️⃣ INSERT ke penduduk (WAJIB LENGKAP)
             $penduduk = Penduduk::create([
@@ -80,8 +99,8 @@ class PendatangController extends Controller
                 'jenis_kelamin'    => $request->jenis_kelamin,
                 'tempat_lahir'     => $request->tempat_lahir,
                 'tanggal_lahir'    => $request->tanggal_lahir,
-                'kk_id'            => $kk->id,
-                'banjar_id'        => $kk->banjar_id,
+                'kk_id'            => $kk?->id,
+                'banjar_id'     => $kk?->banjar_id ?? Auth::user()->banjar_id,
                 'kewarganegaraan'  => 'Indonesia',
             ]);
 
@@ -89,8 +108,8 @@ class PendatangController extends Controller
             Pendatang::create([
                 'penduduk_id'  => $penduduk->id,
                 'asal'         => $request->asal,
-                'kk_tujuan_id' => $kk->id,
-                'banjar_id'    => $kk->banjar_id,
+                'kk_tujuan_id' => $kk?->id,
+                'banjar_id'     => $kk?->banjar_id ?? Auth::user()->banjar_id,
             ]);
         });
 

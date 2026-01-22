@@ -23,10 +23,14 @@
                     <td class="px-4 py-2 border text-green-600 font-semibold">
                         Kelahiran
                     </td>
-                    <td class="px-4 py-2 border">{{ $k->nama_bayi ?? $k->nama }}</td>
-                    <td class="px-4 py-2 border">{{ $k->nik ?? '-' }}</td>
                     <td class="px-4 py-2 border">
-                        {{ $k->tanggal_lahir ?? '-' }}
+                        {{ $k->penduduk->nama ?? '-' }}
+                    </td>
+                    <td class="px-4 py-2 border">
+                        {{ $k->penduduk->nik ?? '-' }}
+                    </td>
+                    <td class="border px-4 py-2">
+                        {{ $k->penduduk->tanggal_lahir ?? '-' }}
                     </td>
                 </tr>
                 @endforeach

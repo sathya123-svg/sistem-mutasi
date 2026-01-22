@@ -13,12 +13,12 @@ class CreatePendudukTable extends Migration
 
             // Data Identitas
             $table->string('nama');
-            $table->string('nik')->unique();
+            $table->string('nik')->nullable()->unique();
             $table->string('jenis_kelamin', 1); // L / P
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
             $table->string('alamat')->nullable();
-            $table->string('banjar')->nullable();
+            // $table->string('banjar')->nullable();
             $table->string('kewarganegaraan')->nullable();
 
             // Relasi ke KK (boleh null)

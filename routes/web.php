@@ -15,6 +15,7 @@ use App\Http\Controllers\KematianController;
 use App\Http\Controllers\PendatangController;
 use App\Http\Controllers\PerkawinanController;
 use App\Http\Controllers\BanjarController;
+use App\Http\Controllers\MutasiKeluarController;
 
 // default redirect ke login
 // Route::get('/', function () {
@@ -68,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('kematian', \App\Http\Controllers\KematianController::class);
     Route::resource('pendatang', \App\Http\Controllers\PendatangController::class);
     Route::resource('perkawinan', \App\Http\Controllers\PerkawinanController::class);
+    Route::resource('mutasi_keluar', \App\Http\Controllers\MutasiKeluarController::class);
 
     // KK
     Route::get('/kk', [KKController::class, 'index'])->name('kk.index');
@@ -76,16 +78,30 @@ Route::middleware('auth')->group(function () {
 
     // Detail KK
     Route::get('/kk/{id}', [KKController::class, 'show'])->name('kk.show');
+    Route::get('/kk/{kk}/anggota/{penduduk}/edit', [KKController::class, 'editAnggota'])->name('kk.editAnggota');
+
+    Route::put('/kk/{kk}/anggota/{penduduk}',[KKController::class, 'updateAnggota'])->name('kk.updateAnggota');
+
+
 
     // Tambah anggota
     Route::get('/kk/{id}/anggota/create', [KKController::class, 'addMember'])->name('kk.addMember');
     Route::post('/kk/{id}/anggota/store', [KKController::class, 'storeMember'])->name('kk.storeMember');
 
+    Route::get('/kk/{id}/ganti-kepala', 
+        [KKController::class, 'gantiKepalaForm']
+    )->name('kk.ganti-kepala.form');
+
+    Route::post('/kk/{id}/ganti-kepala', 
+        [KKController::class, 'gantiKepala']
+    )->name('kk.ganti-kepala');
+
+
     // index
     Route::get('/kematian', [KematianController::class, 'index'])->name('kematian.index');
     Route::get('/pendatang', [PendatangController::class, 'index'])->name('pendatang.index');
     Route::get('/perkawinan', [PerkawinanController::class, 'index'])->name('perkawinan.index');
-
+    Route::get('/mutasi_keluar', [MutasiKeluarController::class, 'index'])->name('mutasi_keluar.index');
     // role
     Route::middleware('role:superadmin')->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -98,6 +114,7 @@ Route::middleware('auth')->group(function () {
         ->name('admin.dashboard');
     });
 
+    
 
     //banjar
     Route::get('/banjar', [BanjarController::class, 'index'])

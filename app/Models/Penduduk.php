@@ -22,6 +22,8 @@ class Penduduk extends Model
         'banjar_id',
         'kewarganegaraan',
         'kk_id',
+        'hubungan_keluarga',
+        'anak_ke',
         // 'desa',
         // 'kecamatan',
         // 'kabupaten',

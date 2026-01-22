@@ -4,11 +4,7 @@
 <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
     <h2 class="text-2xl font-semibold mb-6">Tambah Data Kelahiran</h2>
 
-    @if(session('success'))
-        <div class="bg-green-200 text-green-700 p-2 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
+
 
     <form action="{{ route('kelahiran.store') }}" method="POST">
     @csrf
@@ -21,7 +17,7 @@
     </label>
     <input type="text" name="nik"
         class="w-full mb-4 p-2 border rounded"
-        placeholder=" isi '0' jika belum punya NIK">
+        placeholder="Kosongkan jika bayi belum memiliki NIK">
 
     <label class="block mb-2">Jenis Kelamin:</label>
     <select name="jenis_kelamin" class="w-full mb-4 p-2 border rounded" required>
@@ -36,6 +32,19 @@
     <label class="block mb-2">Tanggal Lahir:</label>
     <input type="date" name="tanggal_lahir"
         class="w-full mb-4 p-2 border rounded" required>
+
+        {{-- Anak Ke --}}
+    <div class="mb-4">
+        <label class="block font-medium mb-1">Anak Ke</label>
+        <input
+            type="number"
+            name="anak_ke"
+            min="1"
+            class="w-full border p-2 rounded"
+            placeholder="Anak ke-berapa dalam keluarga"
+            required
+        >
+    </div>
 
     <label class="block mb-2">Alamat:</label>
     <textarea name="alamat"

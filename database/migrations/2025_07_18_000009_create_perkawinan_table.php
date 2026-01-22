@@ -7,28 +7,38 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('perkawinan', function (Blueprint $table) {
-            $table->id();
+    Schema::create('perkawinan', function (Blueprint $table) {
+        $table->id();
 
-            // Penduduk yang menikah
-            $table->foreignId('penduduk_id')
-                  ->constrained('penduduk')
-                  ->cascadeOnDelete();
+        // relasi (opsional, histori)
+        $table->foreignId('penduduk_id')
+            ->nullable()
+            ->constrained('penduduk')
+            ->nullOnDelete(); // ⬅️ PENTING
 
-            // KK tujuan (jika masuk)
-            $table->foreignId('kk_tujuan_id')
-                  ->nullable()
-                  ->constrained('kks')
-                  ->nullOnDelete();
+        // 🔥 SNAPSHOT DATA (WAJIB)
+        $table->string('nama');
+        $table->string('nik');
+        $table->string('nomor_kk')->nullable();
 
-            // Masuk / Keluar
-            $table->enum('tipe', ['masuk', 'keluar']);
+        // 🔥 FILTER ADMIN PER BANJAR
+        $table->foreignId('banjar_id')
+            ->constrained('banjars')
+            ->restrictOnDelete();
 
-            $table->date('tanggal');
+        // KK tujuan (jika masuk)
+        $table->foreignId('kk_tujuan_id')
+            ->nullable()
+            ->constrained('kks')
+            ->nullOnDelete();
 
-            $table->text('keterangan')->nullable();
-            $table->timestamps();
-        });
+        $table->enum('tipe', ['masuk', 'keluar']);
+        $table->date('tanggal');
+        $table->text('keterangan')->nullable();
+
+        $table->timestamps();
+    });
+
     }
 
     public function down(): void
